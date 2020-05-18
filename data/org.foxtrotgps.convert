@@ -1,0 +1,27 @@
+[org.foxtrotgps:/org/foxtrotgps/]
+gpsd-host = /apps/foxtrotgps/gpsd_host
+gpsd-port = /apps/foxtrotgps/gpsd_port
+latlon-unit = /apps/foxtrotgps/latlon_unit
+alt-unit = /apps/foxtrotgps/alt_unit
+speed-unit = /apps/foxtrotgps/speed_unit
+repo-name = /apps/foxtrotgps/repo_name
+repos = /apps/foxtrotgps/repos
+auto-download = /apps/foxtrotgps/auto_download
+no-redownload = /apps/foxtrotgps/no_redownload
+tracklog-on = /apps/foxtrotgps/tracklog_on
+track-dir = /apps/foxtrotgps/track_dir
+global-x = /apps/foxtrotgps/global_x
+global-y = /apps/foxtrotgps/global_y
+global-zoom = /apps/foxtrotgps/global_zoom
+global-detail-zoom = /apps/foxtrotgps/global_detail_zoom
+myposition-lat = /apps/foxtrotgps/myposition_lat
+myposition-lon = /apps/foxtrotgps/myposition_lon
+fftimer-running = /apps/foxtrotgps/fftimer_running
+ffupdate-interval-minutes = /apps/foxtrotgps/ffupdate_interval_minutes
+me-msg = /apps/foxtrotgps/me_msg
+nick = /apps/foxtrotgps/nick
+pass = /apps/foxtrotgps/pass
+geocode-correction = /apps/foxtrotgps/geocode_correction
+geocode-timezone = /apps/foxtrotgps/geocode_timezone
+hrm-bt-addr = /apps/foxtrotgps/hrm_bt_addr
+hrm-on = /apps/foxtrotgps/hrm_on

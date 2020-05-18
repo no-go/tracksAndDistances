@@ -1,0 +1,101 @@
+#!/usr/bin/python3
+#
+# Basic program to import GeoRSS points into FoxtrotGPS as points of interest
+#
+# Copyright 2009 Paul Wise
+#
+# Permission is hereby granted, free of charge, to any person
+# obtaining a copy of this software and associated documentation
+# files (the "Software"), to deal in the Software without
+# restriction, including without limitation the rights to use,
+# copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following
+# conditions:
+#
+# The above copyright notice and this permission notice shall be
+# included in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+# OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+# HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+# WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+# OTHER DEALINGS IN THE SOFTWARE.
+
+import os
+import sys
+import random
+import sqlite3
+import feedparser
+try:
+	from bs4 import BeautifulSoup
+	def bs(desc):
+		return BeautifulSoup(desc, 'html.parser')
+except (ModuleNotFoundError, ImportError):
+	from BeautifulSoup import BeautifulSoup, BeautifulStoneSoup
+	def bs(desc):
+		return BeautifulSoup(desc, convertEntities=BeautifulStoneSoup.HTML_ENTITIES, smartQuotesTo=None)
+
+def link2txt(a):
+	a_text = ''.join(a).strip()
+
+	if a['href'][0] == '/':
+		a['href'] = 'https://maps.google.com%s' % a['href']
+
+	if a_text == '':
+		return a['href']
+
+	if a_text.lower() == a['href'].lower():
+		return a['href']
+
+	return '%s (%s)' % (a_text,a['href'])
+
+
+poi = []
+
+con = sqlite3.connect(os.path.expanduser('~/.foxtrotgps/poi.db'))
+cur = con.cursor()
+
+for arg in sys.argv[1:]:
+	for e in feedparser.parse(arg).entries:
+		if 'where' in e and 'coordinates' in e.where and 'type' in e.where and e.where.type == 'Point':
+			(lat, lon) = e.where.coordinates
+		elif 'georss_point' in e:
+			(lat, lon) = e.georss_point.split()
+		elif 'gml_pos' in e:
+			(lat, lon) = e.gml_pos.split()
+		elif 'gml_polygon' in e:
+			total_lat = 0
+			total_lon = 0
+			total_points = 0
+			for line in e.gml_poslist.splitlines():
+				(lat, lon) = line.strip().split()
+				total_lat += float(lat)
+				total_lon += float(lon)
+				total_points += 1
+			lat = total_lat/total_points
+			lon = total_lon/total_points
+		elif 'geo_lat' in e and 'geo_long' in e:
+			lat = e.geo_lat
+			lon = e.geo_long
+		else:
+			print('georss2poi: warning: %s: unhandled feed item (not a point): %s' % (arg, e.title))
+			continue
+		rand1 = random.randint(100000000,1000000000)
+		rand2 = random.randint(100000000,1000000000)
+		rand = '%s%s' % (rand1,rand2)
+		desc = e.get('description', '')
+		soup = bs(desc)
+		[img.extract() for img in soup.findAll('img')]
+		[br.replaceWith('\n') for br in soup.findAll('br')]
+		[a.replaceWith(link2txt(a)) for a in soup.findAll('a')]
+		desc = ''.join(soup.findAll(text=True)).strip()
+		poi.append((rand,lat,lon,e.title,desc))
+
+cur.executemany('INSERT INTO poi (idmd5,lat,lon,keywords,desc,visibility,cat,subcat,price_range,extended_open) VALUES (?,?,?,?,?,1.0,0.0,0.0,1.0,0.0)', poi)
+
+con.commit()
+con.close()
