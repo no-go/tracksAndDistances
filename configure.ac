@@ -43,7 +43,5 @@ po/Makefile.in
 src/Makefile
 pixmaps/Makefile
 data/Makefile
-doc/Makefile
-contrib/Makefile
 ])
 AC_OUTPUT

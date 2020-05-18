@@ -1,16 +1,9 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = po src pixmaps data doc contrib
+SUBDIRS = po src pixmaps data
 
 dist_doc_DATA = \
-	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
-	INSTALL\
-	HACKING\
-	NEWS\
-	TODO
+	LICENSE
 
 bzr_dirstate = $(wildcard .bzr/checkout/dirstate)
 

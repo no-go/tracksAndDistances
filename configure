@@ -5951,7 +5951,7 @@ esac
 
 
 
-macro_version='2.4.6.42-b88ce'
+macro_version='2.4.6.42-b88ce-dirty'
 macro_revision='2.4.6.42'
 
 
@@ -14722,7 +14722,7 @@ endif
 
 
 
-ac_config_files="$ac_config_files Makefile po/Makefile.in src/Makefile pixmaps/Makefile data/Makefile doc/Makefile contrib/Makefile"
+ac_config_files="$ac_config_files Makefile po/Makefile.in src/Makefile pixmaps/Makefile data/Makefile"
 
 cat >confcache <<\_ACEOF
 # This file is a shell script that caches the results of configure
@@ -15750,8 +15750,6 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "pixmaps/Makefile") CONFIG_FILES="$CONFIG_FILES pixmaps/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "contrib/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -16430,7 +16428,9 @@ $as_echo X/"$am_mf" |
     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "Something went wrong bootstrapping makefile fragments
-    for automatic dependency tracking.  Try re-running configure with the
+    for automatic dependency tracking.  If GNU make was not used, consider
+    re-running the configure script with MAKE=\"gmake\" (or whatever is
+    necessary).  You can also try re-running configure with the
     '--disable-dependency-tracking' option to at least be able to build
     the package (albeit without support for automatic dependency tracking).
 See \`config.log' for more details" "$LINENO" 5; }
@@ -16460,7 +16460,6 @@ See \`config.log' for more details" "$LINENO" 5; }
     cat <<_LT_EOF >> "$cfgfile"
 #! $SHELL
 # Generated automatically by $as_me ($PACKAGE) $VERSION
-# Libtool was configured on host `(hostname || uname -n) 2>/dev/null | sed 1q`:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.

@@ -393,7 +393,7 @@ on `(hostname || uname -n) 2>/dev/null | sed 1q`
 "
 
 # Files that config.status was made for.
-config_files=" Makefile po/Makefile.in src/Makefile pixmaps/Makefile data/Makefile doc/Makefile contrib/Makefile"
+config_files=" Makefile po/Makefile.in src/Makefile pixmaps/Makefile data/Makefile"
 config_headers=" config.h"
 config_commands=" depfiles default-1 libtool po/stamp-it"
 
@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/home/tux/Dokumente/aur/foxtrotgps'
+ac_pwd='/tmp/tracksAndDistances'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/usr/bin/mkdir -p'
@@ -550,7 +550,7 @@ AMDEP_TRUE="" MAKE="make"
 sed_quote_subst='s/\(["`$\\]\)/\\\1/g'
 double_quote_subst='s/\(["`\\]\)/\\\1/g'
 delay_variable_subst='s/\\\\\\\\\\\$/\\\\\\$/g'
-macro_version='2.4.6.42-b88ce'
+macro_version='2.4.6.42-b88ce-dirty'
 macro_revision='2.4.6.42'
 enable_shared='yes'
 enable_static='yes'
@@ -680,8 +680,8 @@ postuninstall_cmds=''
 finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
-sys_lib_search_path_spec='/home/tux/hhu/00_Masterarbeit/cbc/glpk/here/lib /home/tux/hhu/00_Masterarbeit/cbc/coin-Cbc/lib /usr/lib/gcc/x86_64-pc-linux-gnu/9.1.0 /usr/lib /lib '
-configure_time_dlsearch_path='/lib /usr/lib /usr/lib/R/lib /usr/lib/libfakeroot /usr/lib32 /usr/lib/openmpi '
+sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0 /usr/lib /lib '
+configure_time_dlsearch_path='/lib /usr/lib /usr/lib/libfakeroot /usr/lib32 /usr/lib/openmpi '
 configure_time_lt_sys_library_path=''
 hardcode_action='immediate'
 enable_dlopen='unknown'
@@ -757,8 +757,6 @@ do
     "src/Makefile") CONFIG_FILES="$CONFIG_FILES src/Makefile" ;;
     "pixmaps/Makefile") CONFIG_FILES="$CONFIG_FILES pixmaps/Makefile" ;;
     "data/Makefile") CONFIG_FILES="$CONFIG_FILES data/Makefile" ;;
-    "doc/Makefile") CONFIG_FILES="$CONFIG_FILES doc/Makefile" ;;
-    "contrib/Makefile") CONFIG_FILES="$CONFIG_FILES contrib/Makefile" ;;
     "po/stamp-it") CONFIG_COMMANDS="$CONFIG_COMMANDS po/stamp-it" ;;
 
   *) as_fn_error $? "invalid argument: \`$ac_config_target'" "$LINENO" 5;;
@@ -890,14 +888,14 @@ S["LIBCURL_CFLAGS"]=""
 S["GLADE_LIBS"]="-lglade-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lgli"\
 "b-2.0 -lharfbuzz -lfontconfig -lfreetype -lxml2 "
 S["GLADE_CFLAGS"]="-I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/i"\
-"nclude -I/usr/lib/libffi-3.2.1/include -I/usr/include/harfbuzz -I/usr/include/fribidi -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/includ"\
-"e/uuid -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1."\
-"0 -pthread -I/usr/include/libxml2 "
+"nclude -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/uuid -I/usr/include/cairo -I/u"\
+"sr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1.0 -pthread -I/usr/include/libxml"\
+"2 "
 S["GTK_LIBS"]="-lgtk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lfontconfig -lfreetype -lgdk-x11-2.0 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lcairo -lgdk_pixbuf-"\
-"2.0 -lgobject-2.0 -pthread -lgthread-2.0 -lglib-2.0 "
-S["GTK_CFLAGS"]="-I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/lib/libffi-3.2"\
-".1/include -I/usr/include/harfbuzz -I/usr/include/fribidi -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/uuid -I/usr/include/cairo "\
-"-I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1.0 -pthread "
+"2.0 -lgobject-2.0 -lgthread-2.0 -pthread -lglib-2.0 "
+S["GTK_CFLAGS"]="-I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbu"\
+"zz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/uuid -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/i"\
+"nclude/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1.0 -pthread "
 S["PKG_CONFIG_LIBDIR"]=""
 S["PKG_CONFIG_PATH"]=""
 S["PKG_CONFIG"]="/usr/bin/pkg-config"
@@ -1033,12 +1031,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/usr/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/install-sh"
-S["MAKEINFO"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing automake-1.16"
-S["AUTOCONF"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing autoconf"
-S["ACLOCAL"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing aclocal-1.16"
+S["install_sh"]="${SHELL} /tmp/tracksAndDistances/install-sh"
+S["MAKEINFO"]="${SHELL} /tmp/tracksAndDistances/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /tmp/tracksAndDistances/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /tmp/tracksAndDistances/missing automake-1.16"
+S["AUTOCONF"]="${SHELL} /tmp/tracksAndDistances/missing autoconf"
+S["ACLOCAL"]="${SHELL} /tmp/tracksAndDistances/missing aclocal-1.16"
 S["VERSION"]="1.2.2+"
 S["PACKAGE"]="foxtrotgps"
 S["CYGPATH_W"]="echo"
@@ -1560,7 +1558,9 @@ $as_echo X/"$am_mf" |
     { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
 $as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
 as_fn_error $? "Something went wrong bootstrapping makefile fragments
-    for automatic dependency tracking.  Try re-running configure with the
+    for automatic dependency tracking.  If GNU make was not used, consider
+    re-running the configure script with MAKE=\"gmake\" (or whatever is
+    necessary).  You can also try re-running configure with the
     '--disable-dependency-tracking' option to at least be able to build
     the package (albeit without support for automatic dependency tracking).
 See \`config.log' for more details" "$LINENO" 5; }
@@ -1590,7 +1590,6 @@ See \`config.log' for more details" "$LINENO" 5; }
     cat <<_LT_EOF >> "$cfgfile"
 #! $SHELL
 # Generated automatically by $as_me ($PACKAGE) $VERSION
-# Libtool was configured on host `(hostname || uname -n) 2>/dev/null | sed 1q`:
 # NOTE: Changes made to this file will be lost: look at ltmain.sh.
 
 # Provide generalized library-building support services.
