@@ -549,7 +549,22 @@ load_log_file_into_list(char *file)
 	GSList *list = NULL;
 	char line[121];
 	FILE *fd;
+    float start_lat=0, start_lon=0;
+    float overall_distance = 0;
+    float distance=0;
+    double unit_conv = 1;
+    static gchar distunit[3];
 
+    if(global_speed_unit==1) {
+        unit_conv = 1.0/1.609344;
+        g_sprintf(distunit, "%s", "m");
+    } else if(global_speed_unit==2) {
+        unit_conv = 1.0/1.852;
+        g_sprintf(distunit, "%s", "NM");
+    } else {
+        g_sprintf(distunit, "%s", "km");
+    }
+    
 	fd = fopen(file, "r");
 
 	if (!fd) {
@@ -574,6 +589,21 @@ load_log_file_into_list(char *file)
 		tp->lon = deg2rad (atof (lonstr));
 
 		list = g_slist_append(list, tp);
+        
+        if (!(start_lat==0 && start_lon==0)) {
+            distance = 6371.0 *
+             acos(
+              sin(start_lat) * sin(tp->lat) +
+              cos(start_lat) *
+              cos(tp->lat) *
+              cos(tp->lon - start_lon)
+             );
+        }
+        
+        overall_distance += distance;
+        g_print("%f, %f, %.2f%s\n", tp->lat, tp->lon, overall_distance*unit_conv, distunit);
+        start_lat = tp->lat;
+        start_lon = tp->lon;
 	}
 
 	fclose (fd);
