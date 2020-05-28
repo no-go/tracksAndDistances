@@ -59,5 +59,5 @@ In file `src\gps_functions.c` I comment out (line 756, because of a type trouble
 
 ## make fail
 
-That is hard, but ok. I remove some stuff, but the `src\foxtrotgps` binary schould be build on (arch)linux.
+That is hard, but ok. I remove some stuff, but the `src\foxtrotgps` binary should be build on (arch)linux.
 
