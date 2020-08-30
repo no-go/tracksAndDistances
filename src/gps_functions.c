@@ -759,7 +759,8 @@ cb_gpsd_data(GIOChannel *src, GIOCondition condition, gpointer data)
 		{
 			gpsdata->fix.time = (time_t) 0;
 		}
-		gpsdata->valid = (libgps_gpsdata.status != STATUS_NO_FIX);
+		// ugly hack. i do not need gpsd
+		gpsdata->valid = false ; //(libgps_gpsdata.status != STATUS_NO_FIX);
 		if (gpsdata->valid)
 		{
 			gpsdata->seen_valid = TRUE;

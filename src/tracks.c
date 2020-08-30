@@ -30,7 +30,7 @@
 
 GSList *loaded_track = NULL;
 GtkWidget *window12;
-GtkWidget *dialog10;
+GtkWidget *dialog10x;
 
 
 
@@ -869,10 +869,10 @@ fetch_track(GtkWidget *widget, char *service, char *start, char *end)
 		                                 _(PACKAGE_NAME));
 		GtkWidget *tmpWidget;
 
-		tmpWidget = lookup_widget(dialog10, "label190");
+		tmpWidget = lookup_widget(dialog10x, "label190");
 		gtk_label_set_label(GTK_LABEL(tmpWidget), err_msg);
 
-		tmpWidget = lookup_widget(dialog10, "okbutton11");
+		tmpWidget = lookup_widget(dialog10x, "okbutton11");
 		gtk_widget_set_sensitive(tmpWidget, TRUE);
 
 		g_warning("###unknown route service (%s) selected\n", service);
@@ -891,7 +891,7 @@ void fetch_yournavigation_track(GtkWidget *widget, char *start, char *end)
 	startlonstr = strtok_r (NULL, ",", &parseptr);
 	endlatstr = strtok_r (end, ",", &parseptr);
 	endlonstr = strtok_r (NULL, ",", &parseptr);
-	dialog10 = widget;
+	dialog10x = widget;
 
 	url = g_strdup_printf("http://www.yournavigation.org/api/1.0/gosmore.php?format=kml&flat=%s&flon=%s&tlat=%s&tlon=%s&v=motorcar&fast=1&layer=mapnik",startlatstr, startlonstr, endlatstr, endlonstr);
 #if GLIB_CHECK_VERSION(2,34,0)
@@ -905,7 +905,7 @@ void fetch_yournavigation_track(GtkWidget *widget, char *start, char *end)
 void fetch_openrouteservice_track(GtkWidget *widget, char *start, char *end)
 {
 	char *url;
-	dialog10 = widget;
+	dialog10x = widget;
 	char *startlatstr;
 	char *startlonstr;
 	char *endlatstr;
@@ -1014,7 +1014,7 @@ void process_fetched_track(postreply_t *reply, bool save_gpx)
 			}
 
 			paint_loaded_track();
-			gtk_widget_hide(dialog10);
+			gtk_widget_hide(dialog10x);
 		}
 		gdk_threads_leave();
 	}
@@ -1052,10 +1052,10 @@ void process_fetched_track(postreply_t *reply, bool save_gpx)
 		{
 			GtkWidget *widget;
 
-			widget = lookup_widget(dialog10, "label190");
+			widget = lookup_widget(dialog10x, "label190");
 			gtk_label_set_label(GTK_LABEL(widget), err_msg);
 
-			widget = lookup_widget(dialog10, "okbutton11");
+			widget = lookup_widget(dialog10x, "okbutton11");
 			gtk_widget_set_sensitive(widget, TRUE);
 		}
 		gdk_threads_leave();

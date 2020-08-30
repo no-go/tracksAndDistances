@@ -1,0 +1,10 @@
+po/.intltool-merge-cache.lock
+src/.deps
+.bzr
+autom4te.cache
+stamp-*
+libtool
+src/*.o
+src/.deps
+src/foxtrotgps
+

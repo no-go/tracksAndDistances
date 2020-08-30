@@ -437,7 +437,7 @@ Copyright (C) 2012 Free Software Foundation, Inc.
 This config.status script is free software; the Free Software Foundation
 gives unlimited permission to copy, distribute and modify it."
 
-ac_pwd='/tmp/tracksAndDistances'
+ac_pwd='/home/tux/Dokumente/aur/foxtrotgps'
 srcdir='.'
 INSTALL='/usr/bin/install -c'
 MKDIR_P='/usr/bin/mkdir -p'
@@ -680,7 +680,7 @@ postuninstall_cmds=''
 finish_cmds='PATH="\$PATH:/sbin" ldconfig -n $libdir'
 finish_eval=''
 hardcode_into_libs='yes'
-sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/9.3.0 /usr/lib /lib '
+sys_lib_search_path_spec='/usr/lib/gcc/x86_64-pc-linux-gnu/10.2.0 /usr/lib /lib '
 configure_time_dlsearch_path='/lib /usr/lib /usr/lib/libfakeroot /usr/lib32 /usr/lib/openmpi '
 configure_time_lt_sys_library_path=''
 hardcode_action='immediate'
@@ -888,14 +888,13 @@ S["LIBCURL_CFLAGS"]=""
 S["GLADE_LIBS"]="-lglade-2.0 -lgtk-x11-2.0 -lgdk-x11-2.0 -lpangocairo-1.0 -latk-1.0 -lcairo -lgdk_pixbuf-2.0 -lgio-2.0 -lpangoft2-1.0 -lpango-1.0 -lgobject-2.0 -lgli"\
 "b-2.0 -lharfbuzz -lfontconfig -lfreetype -lxml2 "
 S["GLADE_CFLAGS"]="-I/usr/include/libglade-2.0 -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/i"\
-"nclude -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/uuid -I/usr/include/cairo -I/u"\
-"sr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1.0 -pthread -I/usr/include/libxml"\
-"2 "
+"nclude -I/usr/include/harfbuzz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi "\
+"-I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0 -pthread -I/usr/include/libxml2 "
 S["GTK_LIBS"]="-lgtk-x11-2.0 -latk-1.0 -lgio-2.0 -lpangoft2-1.0 -lfontconfig -lfreetype -lgdk-x11-2.0 -lpangocairo-1.0 -lpango-1.0 -lharfbuzz -lcairo -lgdk_pixbuf-"\
 "2.0 -lgobject-2.0 -lgthread-2.0 -pthread -lglib-2.0 "
 S["GTK_CFLAGS"]="-I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include -I/usr/include/harfbu"\
-"zz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/fribidi -I/usr/include/uuid -I/usr/include/cairo -I/usr/include/pixman-1 -I/usr/i"\
-"nclude/gdk-pixbuf-2.0 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/atk-1.0 -pthread "
+"zz -I/usr/include/freetype2 -I/usr/include/libpng16 -I/usr/include/libmount -I/usr/include/blkid -I/usr/include/fribidi -I/usr/include/cairo -I/usr/"\
+"include/pixman-1 -I/usr/include/gdk-pixbuf-2.0 -I/usr/include/atk-1.0 -pthread "
 S["PKG_CONFIG_LIBDIR"]=""
 S["PKG_CONFIG_PATH"]=""
 S["PKG_CONFIG"]="/usr/bin/pkg-config"
@@ -1031,12 +1030,12 @@ S["mkdir_p"]="$(MKDIR_P)"
 S["MKDIR_P"]="/usr/bin/mkdir -p"
 S["INSTALL_STRIP_PROGRAM"]="$(install_sh) -c -s"
 S["STRIP"]="strip"
-S["install_sh"]="${SHELL} /tmp/tracksAndDistances/install-sh"
-S["MAKEINFO"]="${SHELL} /tmp/tracksAndDistances/missing makeinfo"
-S["AUTOHEADER"]="${SHELL} /tmp/tracksAndDistances/missing autoheader"
-S["AUTOMAKE"]="${SHELL} /tmp/tracksAndDistances/missing automake-1.16"
-S["AUTOCONF"]="${SHELL} /tmp/tracksAndDistances/missing autoconf"
-S["ACLOCAL"]="${SHELL} /tmp/tracksAndDistances/missing aclocal-1.16"
+S["install_sh"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/install-sh"
+S["MAKEINFO"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing makeinfo"
+S["AUTOHEADER"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing autoheader"
+S["AUTOMAKE"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing automake-1.16"
+S["AUTOCONF"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing autoconf"
+S["ACLOCAL"]="${SHELL} /home/tux/Dokumente/aur/foxtrotgps/missing aclocal-1.16"
 S["VERSION"]="1.2.2+"
 S["PACKAGE"]="foxtrotgps"
 S["CYGPATH_W"]="echo"

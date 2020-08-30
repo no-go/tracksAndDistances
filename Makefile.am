@@ -2,8 +2,7 @@
 
 SUBDIRS = po src pixmaps data
 
-dist_doc_DATA = \
-	LICENSE
+dist_doc_DATA = 
 
 bzr_dirstate = $(wildcard .bzr/checkout/dirstate)
 
