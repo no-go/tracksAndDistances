@@ -103,6 +103,13 @@ if you want to copy these tiles from a Linux OSM folder to the cygwin system.
 
 ![run foxtrotNoGps on Win8.1 32bit this Cygwin](screenshot2.png)
 
+## Tested on Win8.1 32bit ok, but does it work on Linux?
+
+Yes. You need the same automake,gcc,autoconf,... tools and development libs and
+your Makefiles and configure should be generated for Linux in the same way.
+Cause cygwin has a similar directory structure and commands, everything
+will be the same (but without .exe).
+
 ## Do I need the stupid empty files?
 
 Yes. Maybe with `configure.ac` you can tell autoconf not use or generated them, but I did
