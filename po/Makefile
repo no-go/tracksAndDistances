@@ -21,7 +21,7 @@ GETTEXT_PACKAGE = foxtrotgps
 PACKAGE = foxtrotgps
 VERSION = 1.2.2+
 
-SHELL = /bin/sh
+SHELL = /bin/bash
 
 srcdir = .
 top_srcdir = ..

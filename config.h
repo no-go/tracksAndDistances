@@ -2,7 +2,7 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
 /* Heartrate-monitor support is enabled */
-#define ENABLE_HRM /**/
+/* #undef ENABLE_HRM */
 
 /* always defined to indicate that i18n is enabled */
 #define ENABLE_NLS 1
@@ -14,7 +14,7 @@
 #define HAVE_BIND_TEXTDOMAIN_CODESET 1
 
 /* We have the BlueZ bluetooth library */
-#define HAVE_BLUEZ /**/
+/* #undef HAVE_BLUEZ */
 
 /* Define to 1 if you have the Mac OS X function CFLocaleCopyCurrent in the
    CoreFoundation framework. */
