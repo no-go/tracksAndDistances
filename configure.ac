@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([FoxtrotGPS], [1.2.2+], [foss-gps@lists.osgeo.org])
+AC_INIT([FoxtrotNoGPS], [1.2.2+], [foss-gps@lists.osgeo.org])
 AM_INIT_AUTOMAKE([-Wall -Werror -Wno-portability])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
@@ -9,14 +9,9 @@ AM_MAINTAINER_MODE([enable])
 AC_PROG_CC_C99
 AC_HEADER_STDC
 
-GETTEXT_PACKAGE=foxtrotgps
+GETTEXT_PACKAGE=foxtrotnogps
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE, "$GETTEXT_PACKAGE", [Package name for gettext])
-IT_PROG_INTLTOOL([0.23])
-
-dnl Languages which your application supports
-ALL_LINGUAS="bg cs de es fi fr hu ru sk nl ja sr pt_BR pl it"
-AM_GLIB_GNU_GETTEXT
 
 AC_PROG_LN_S
 LT_INIT
@@ -27,7 +22,6 @@ PKG_CHECK_MODULES(LIBCURL, [libcurl])
 PKG_CHECK_MODULES(SQLITE, [sqlite3])
 PKG_CHECK_MODULES(LIBEXIF, [libexif])
 PKG_CHECK_MODULES(LIBXML, [libxml-2.0])
-PKG_CHECK_MODULES(LIBGPS, [libgps >= 2.90])
 PKG_CHECK_MODULES(BLUETOOTH, [bluez],
                   [AC_DEFINE(HAVE_BLUEZ, [],
                              [We have the BlueZ bluetooth library])
@@ -39,9 +33,6 @@ GLIB_GSETTINGS
 
 AC_CONFIG_FILES([
 Makefile
-po/Makefile.in
 src/Makefile
-pixmaps/Makefile
-data/Makefile
 ])
 AC_OUTPUT

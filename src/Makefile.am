@@ -13,12 +13,11 @@ AM_CPPFLAGS = \
 	$(SQLITE_CFLAGS) \
 	$(LIBEXIF_CFLAGS) \
 	$(LIBXML_CFLAGS) \
-	$(LIBGPS_CFLAGS) \
 	$(BLUETOOTH_CFLAGS)
 
-bin_PROGRAMS = foxtrotgps
+bin_PROGRAMS = foxtrotnogps
 
-foxtrotgps_SOURCES = \
+foxtrotnogps_SOURCES = \
 	support.h\
 	support.c\
 	main.c\
@@ -57,15 +56,14 @@ foxtrotgps_SOURCES = \
 	hrm_functions.c\
 	hrm_functions.h
 
-foxtrotgps_LDFLAGS = -export-dynamic
+foxtrotnogps_LDFLAGS = -export-dynamic
 
-foxtrotgps_LDADD =  \
+foxtrotnogps_LDADD =  \
 	$(GTK_LIBS) \
 	$(GLADE_LIBS) \
 	$(LIBCURL_LIBS) \
 	$(SQLITE_LIBS) \
 	$(LIBEXIF_LIBS) \
 	$(LIBXML_LIBS) \
-	$(LIBGPS_LIBS) \
 	$(BLUETOOTH_LIBS) \
 	-lm

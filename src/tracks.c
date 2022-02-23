@@ -16,8 +16,7 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-#include <gps.h>
-
+#include <stdbool.h>
 
 #include "globals.h"
 #include "interface.h"
@@ -206,19 +205,7 @@ track_log()
 
 		heartfreq = (hrmdata) ? hrmdata->freq : 0;
 
-		switch (gpsdata->fix.mode) {
-		default:
-		case MODE_NOT_SEEN:
-		case MODE_NO_FIX:
-			fixstr = "none";
-			break;
-		case MODE_2D:
-			fixstr = "2d";
-			break;
-		case MODE_3D:
-			fixstr = "3d";
-			break;
-		}
+		fixstr = "none";
 
 		if (fp)
 		{

@@ -1,4 +1,123 @@
-# Not original FoxtrotGPS!
+# Win32 cygwin Version (Win8.1 bing)
+
+**GNU = Gnu is NOT Unix** that means, the lovely **foxtrotgps** should run
+in M$ Windows, too! Ok, I give it a try!
+
+## (Anti-)Features of my version
+
+- call it FoxtrotNoGPS (gpsd Code is a dummy, because I got trouble with that)
+- minimal file setup = maximal **do it yourself**
+- original Linux stuff working in Windows with cygwin 32bit (deprecated)
+- You need all building and compiling stuff from cygwin
+- finaly you have to start `foxtrotnogps.exe` in a X-Server terminal from cygwin
+- some glib code is still deprecared in foxtrotgps (lost of warnings during compilation)
+- all foxtrotgps icons are missing (not a real problem)
+- minimal: just english language (no `po/` files)
+- may learn something about `automake` and `autoconf` (it creates Makefiles
+  and config and install scripts)
+
+## Your Roadmap to build, a sketch
+
+- get my foxtrotgps files from this repository (win32_cygwin branch)
+- get cygwin (32bit) setup, maybe the 64Bit setup is possible, too
+- Install this via cygwin:
+  - xinit
+  - xorg-server
+  - gcc
+  - make
+  - automake
+  - autoconf
+  - pkg-config
+  - intltool
+  - imagemagick
+  - libxml2, libxml2-dev
+  - gconf2, libgconf2-dev, libgtk2.0-dev, libglade2-dev
+  - libcurl4-devel, libexif-dev, libsqlite3-dev
+
+This install list based on my memory/brain and may something is missing.
+During `./configure` or compiling you got error or a brake and you will
+see, what is missing! You can take a look (2022, Februar) on https://www.foxtrotgps.org/build.html
+with a similar list. In my version you do **not need** `help2man` and `libgps`.
+
+After installing (ca. 240MB download, 1.5 GB cygwin folder) run the Cygwin
+Xserver and use the small icon (next to the clock) to
+run a Cygwin-Terminal. Do not use the Cygwin-Terminal Icon from the
+Desktop, because that one does not know anything aboaut the X-Server
+and its shared display!
+
+![run Cygwin-Terminal in a X-server display context](screenshot0.jpg)
+
+A easy way to change directory (cd) on windows and Linux xwindow terminals
+is: type `cd` (cd and a aditional space!) and drag and drop the folder-icon of the
+filemanager/explorer to the terminal. Do it, now, to change to the directory, where
+my foxtrotgps files are stored.
+
+![change directory via drag and drop](screenshot1.gif)
+
+If you type `ls` you see e.g. a `src/` (with `c code` in it and a `Makefile.am`) and
+some other important files (especially `configure.ac` and `Makefile.am`).
+
+Now we generate Makefiles, some other default scripts and a `configure` script:
+
+~~~
+autoreconf --install
+~~~
+
+This will take a while. Make some coffee, now! If everything went fine, these files
+will be generated: `configure` and `src/Makefile` and a lot of other files, e.g.
+a `Makefile` that just call the Makefile in `src/`.
+
+For a Makefile fine tuning run this:
+
+~~~
+./configure
+~~~
+
+If it fails, then maybe you install the wrong `gcc` or a lib is missing. If not, then
+run `make`:
+
+~~~
+make
+~~~
+
+Because of foxtrotgps code is a bit out of sync with the actual glib or gtk+ version,
+you will get some warnings but finally a `foxtrotnogps.exe` in the `src/` folder.
+
+Finally you have to place 2 files and build a folder for glade and glib:
+
+~~~
+mkdir /usr/local/share/foxtrotnogps/
+cp foxtrotnogps.glade /usr/local/share/foxtrotnogps/foxtrotnogps.glade
+cp org.foxtrotgps.gschema.xml /usr/share/glib-2.0/schemas/
+~~~
+
+Say to glib, that there is a new app scheme:
+
+~~~
+glib-compile-schemas.exe /usr/share/glib-2.0/schemas/
+~~~
+
+Now you can run/execute `src/foxtrotnogps.exe`. It will build a `/home/xxxx/Maps/OSM/`
+folder (xxxx = your username) to store OSM tiles. The "normal" path is `C:\cygwin\home\...`
+if you want to copy these tiles from a Linux OSM folder to the cygwin system.
+
+![run foxtrotNoGps on Win8.1 32bit this Cygwin](screenshot2.png)
+
+## Do I need the stupid empty files?
+
+Yes. Maybe with `configure.ac` you can tell autoconf not use or generated them, but I did
+not check this. Feel free to google that and get more infos about automake and autoconf!
+The original `po/` folder with glib (or gtk+?) text replacements are the 2nd step to
+be googled. Maybe in the future I will use all these original foxtrotgps build, generate
+and install stuff by default. But for now: this minimal config is good to learn.
+
+## Why org.foxtrotgps.gschema.xml ?
+
+I try `org.foxtrotNOgps.gschema.xml` with NO in file name and content (beginning of xml-file),
+but the executeable wants it without NO. Maybe somewhere in the code or config
+exists a reference to `org.foxtrotgps` and I did not replace it. I am sorry.
+
+# This is NOT original FoxtrotGPS!
 
 FoxtrotGPS is an easy-to-use graphical tool that can be used
 to track the position of a GPS receiver on a map in relation to
@@ -17,25 +136,25 @@ The original authors are:
 See https://www.foxtrotgps.org/ for more detail! If you want to contribute,
 use their unknown version control system "Bazaar".
 
-## Why did I modify it?
+## Why did I modify the original foxtrotgps?
 
 There are no good tools for drawing and displaying routes WITHOUT 
 gps-log (including distance measurement). Various websites require 
 an upload or fail to display.
 
-FoxtrotGPS has a good function to load and display tracks, but I missed the 
-possibility to create them manually. For this reason I have extended the 
-function for distance measurement, where each measuring point (incl. distance) 
-is added (and not replaced) in the clipboard.
+FoxtrotGPS has a good function to load and display tracks,
+but **I missed the possibility to create tracks manually**. For this reason
+I have extended the function for **distance measurement**, where each measuring
+point (incl. distance) is **added (and not replaced) in the clipboard**.
 
-The content of the clipboard can then easily be saved with a text editor and 
-later be loaded and displayed as a track in FoxtrotGPS. Why other programs 
+The **content of the clipboard** can then easily be **saved with a text editor** and 
+later be **loaded and displayed as a track in FoxtrotNoGPS**. Why other programs 
 and websites can't do this and only create tracks with a GPS mouse is a 
 mystery to me since many years.
 
-## My Comments to the mailing list of foxtrotgps
+# My Comments to the mailing list of foxtrotgps
 
-### 1. june 2020, 16:47
+## 1. june 2020, 16:47
 
 Hello, everyone,
 
@@ -63,7 +182,7 @@ Bazaar.
 So at this point I wanted to ask how I should proceed and whether there is any 
 interest at these changes.
 
-### 1. june 2020, 22:01
+## 1. june 2020, 22:01
 
 Hi everyone,
 
@@ -77,32 +196,4 @@ You are welcome to adopt the change if you also think it makes sense for other u
 
 kindly regards,
 Jochen
-
-## Patch?!
-
-In file `src/callbacks.c:on_item4_activate()` I place a new Clipboard code:
-
-```
-    GtkClipboard * clipdummy;
-    clipdummy = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-    gchar * cliptext = gtk_clipboard_wait_for_text(clipdummy);
-    gchar clipnew[512];
-    GString * toclipboard;
-    toclipboard = g_string_new(cliptext);
-    g_sprintf (clipnew, _("%s,%.2f%s\n"), latlon, overall_distance*unit_conv, distunit);
-    g_string_append(toclipboard, clipnew);
-    gtk_clipboard_set_text(clipdummy, toclipboard->str, -1);
-```
-
-In file `src\gps_functions.c` I comment out (line 756, because of a type trouble with double:
-
-```
-    gpsdata->fix.time = libgps_gpsdata.fix.time;
-```
-
-... and I did not need the gps stuff ;-)
-
-## make fail
-
-That is hard, but ok. I remove some stuff, but the `src\foxtrotgps` binary should be build on (arch)linux.
 
