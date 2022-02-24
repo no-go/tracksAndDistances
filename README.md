@@ -7,7 +7,7 @@ in M$ Windows, too! Ok, I give it a try!
 
 - call it FoxtrotNoGPS (gpsd Code is a dummy, because I got trouble with that)
 - minimal file setup = maximal **do it yourself**
-- original Linux stuff working in Windows with cygwin 32bit (deprecated)
+- original Linux stuff working in Windows with cygwin (32bit, but setup is deprecated)
 - You need all building and compiling stuff from cygwin
 - finaly you have to start `foxtrotnogps.exe` in a X-Server terminal from cygwin
 - some glib code is still deprecared in foxtrotgps (lost of warnings during compilation)
@@ -23,19 +23,19 @@ in M$ Windows, too! Ok, I give it a try!
 - Install this via cygwin:
   - xinit
   - xorg-server
-  - gcc
+  - gcc-core
   - make
   - automake
   - autoconf
   - pkg-config
   - intltool
+  - libiconv-devel
   - imagemagick
-  - libxml2, libxml2-dev
-  - gconf2, libgconf2-dev, libgtk2.0-dev, libglade2-dev
-  - libcurl4-devel, libexif-dev, libsqlite3-dev
+  - libxml2, libxml2-devel
+  - gconf2, libgconf2-devel, libgtk2.0-devel, libglade2-devel
+  - libcurl4-devel, libexif-devel, libsqlite3-devel
 
-This install list based on my memory/brain and may something is missing.
-During `./configure` or compiling you got error or a brake and you will
+During `./configure` or compiling you got errors or a brake and you will
 see, what is missing! You can take a look (2022, Februar) on https://www.foxtrotgps.org/build.html
 with a similar list. In my version you do **not need** `help2man` and `libgps`.
 
@@ -47,7 +47,7 @@ and its shared display!
 
 ![run Cygwin-Terminal in a X-server display context](screenshot0.jpg)
 
-A easy way to change directory (cd) on windows and Linux xwindow terminals
+An easy way to change directory (cd) on Windows and Linux xwindow terminals
 is: type `cd` (cd and a aditional space!) and drag and drop the folder-icon of the
 filemanager/explorer to the terminal. Do it, now, to change to the directory, where
 my foxtrotgps files are stored.
@@ -73,7 +73,7 @@ For a Makefile fine tuning run this:
 ./configure
 ~~~
 
-If it fails, then maybe you install the wrong `gcc` or a lib is missing. If not, then
+If it fails, then maybe you install the wrong `gcc` (64bit?) or a lib is missing. If not, then
 run `make`:
 
 ~~~
@@ -83,10 +83,10 @@ make
 Because of foxtrotgps code is a bit out of sync with the actual glib or gtk+ version,
 you will get some warnings but finally a `foxtrotnogps.exe` in the `src/` folder.
 
-Finally you have to place 2 files and build a folder for glade and glib:
+Finally you have to place 2 files and build a folder for glade:
 
 ~~~
-mkdir /usr/local/share/foxtrotnogps/
+mkdir -p /usr/local/share/foxtrotnogps/
 cp foxtrotnogps.glade /usr/local/share/foxtrotnogps/foxtrotnogps.glade
 cp org.foxtrotgps.gschema.xml /usr/share/glib-2.0/schemas/
 ~~~
@@ -108,7 +108,7 @@ if you want to copy these tiles from a Linux OSM folder to the cygwin system.
 Yes. You need the same automake,gcc,autoconf,... tools and development libs and
 your Makefiles and configure should be generated for Linux in the same way.
 Cause cygwin has a similar directory structure and commands, everything
-will be the same (but without .exe).
+will be the same (but without .exe). Win10 tested, too.
 
 ## Do I need the stupid empty files?
 
