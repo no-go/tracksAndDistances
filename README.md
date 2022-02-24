@@ -108,7 +108,9 @@ if you want to copy these tiles from a Linux OSM folder to the cygwin system.
 Yes. You need the same automake,gcc,autoconf,... tools and development libs and
 your Makefiles and configure should be generated for Linux in the same way.
 Cause cygwin has a similar directory structure and commands, everything
-will be the same (but without .exe). Win10 tested, too.
+will be the same (but without .exe). Win10 64bit and cygwin32bit: compile as 32bit exe works,
+gtk window is displayed, no button reactions, no map loaded. Maybe everything in a 64bit
+context (compile, xserver) is the better way.
 
 ## Do I need the stupid empty files?
 
