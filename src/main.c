@@ -99,15 +99,16 @@ main (int argc, char *argv[])
 
 	setlocale (LC_NUMERIC, "C");
 
-	add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
+	add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE_NAME "/pixmaps");
 
 
 	global_builder = gtk_builder_new();
 
 	if (!gtk_builder_add_from_file(global_builder, gladefile, &error)) {
+		g_printerr("Failed to load UI: %s\n", error->message);
 		g_error (_("%s could not load its user interface; "
 		 "%s does not not appear to be properly installed."),
-		 PACKAGE, PACKAGE);
+		 PACKAGE_NAME, PACKAGE_NAME);
 		return 1;
 	}
 

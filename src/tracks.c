@@ -355,7 +355,7 @@ tracks_open_tracks_dialog()
 
 
 
-	window12 = glade_xml_get_widget(gladexml, "window12");
+	window12 = GTK_WIDGET(gtk_builder_get_object(global_builder, "window12"));
 	gtk_widget_show(window12);
 
 	vbox = lookup_widget(window12, "vbox39");
@@ -544,14 +544,14 @@ load_log_file_into_list(char *file)
 
     if(global_speed_unit==1) {
         unit_conv = 1.0/1.609344;
-        g_sprintf(distunit, "%s", "m");
+        g_snprintf(distunit, sizeof(distunit), "%s", "m");
     } else if(global_speed_unit==2) {
         unit_conv = 1.0/1.852;
-        g_sprintf(distunit, "%s", "NM");
+        g_snprintf(distunit, sizeof(distunit), "%s", "NM");
     } else {
-        g_sprintf(distunit, "%s", "km");
+        g_snprintf(distunit, sizeof(distunit), "%s", "km");
     }
-    
+
 	fd = fopen(file, "r");
 
 	if (!fd) {
@@ -576,7 +576,7 @@ load_log_file_into_list(char *file)
 		tp->lon = deg2rad (atof (lonstr));
 
 		list = g_slist_append(list, tp);
-        
+
         if (!(start_lat==0 && start_lon==0)) {
             distance = 6371.0 *
              acos(
@@ -586,7 +586,7 @@ load_log_file_into_list(char *file)
               cos(tp->lon - start_lon)
              );
         }
-        
+
         overall_distance += distance;
         g_print("%f, %f, %.2f%s\n", tp->lat, tp->lon, overall_distance*unit_conv, distunit);
         start_lat = tp->lat;

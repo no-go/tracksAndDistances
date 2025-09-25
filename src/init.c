@@ -111,7 +111,7 @@ init()
 	char *str = NULL;
 
 
-	foxtrotgps_dir = g_strconcat(global_home_dir, "/." PACKAGE, NULL);
+	foxtrotgps_dir = g_strconcat(global_home_dir, "/." PACKAGE_NAME, NULL);
 	g_mkdir(foxtrotgps_dir, 0700);
 
 	repoconfig__create_dropdown();
@@ -248,7 +248,7 @@ init()
 
 	get_gps ();
 
-	gtk_window_set_icon_from_file(GTK_WINDOW(window1), PACKAGE_PIXMAPS_DIR "/" PACKAGE ".png" ,&err);
+	gtk_window_set_icon_from_file(GTK_WINDOW(window1), PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME ".png" ,&err);
 	if (err)
 	{
 		fprintf (stderr, _("Failed to load pixbuf file: %s\n"),

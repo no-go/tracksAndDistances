@@ -6,7 +6,7 @@
 GdkPixmap *pixmap = NULL;
 
 const char *gladefile =
-	PACKAGE_DATA_DIR "/" PACKAGE "/" PACKAGE ".glade";
+	PACKAGE_DATA_DIR "/" PACKAGE_NAME "/" PACKAGE_NAME ".glade";
 GtkBuilder *global_builder = NULL;
 
 GtkWidget *window1 = NULL;

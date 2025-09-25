@@ -107,7 +107,7 @@ paint_photos()
 	if(!photo_icon)
 	{
 		photo_icon = gdk_pixbuf_new_from_file_at_size (
-			PACKAGE_PIXMAPS_DIR "/" PACKAGE "-photo.png", 24,24,
+			PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME "-photo.png", 24,24,
 			&error);
 	}
 

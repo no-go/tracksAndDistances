@@ -272,7 +272,7 @@ gdk_threads_leave();
 	curl_easy_setopt(curl_handle, CURLOPT_HTTPPOST, formdata);
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEFUNCTION, cb_write_to_mem);
 	curl_easy_setopt(curl_handle, CURLOPT_WRITEDATA, (void *)&chunk);
-	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT,  VERSION );
+	curl_easy_setopt(curl_handle, CURLOPT_USERAGENT,  GL_VERSION );
 
 	curl_easy_perform(curl_handle);
 	curl_easy_getinfo(curl_handle, CURLINFO_RESPONSE_CODE, &response_code);
@@ -379,7 +379,7 @@ paint_friends()
 	if(!friend_icon)
 	{
 		friend_icon = gdk_pixbuf_new_from_file_at_size (
-			PACKAGE_PIXMAPS_DIR "/" PACKAGE "-friend.png", 24,24,
+			PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME "-friend.png", 24,24,
 			&error);
 	}
 	if (pixmap && !gc_map)
@@ -727,7 +727,7 @@ thread_send_message(void *ptr)
 	postdata = ptr;
 
 
-	postreply = mycurl__do_http_post(MSG_SEND_URL, postdata, VERSION);
+	postreply = mycurl__do_http_post(MSG_SEND_URL, postdata, PACKAGE_VERSION);
 
 
 

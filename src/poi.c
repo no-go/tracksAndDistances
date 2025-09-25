@@ -117,7 +117,7 @@ get_poi_icon (poi_t *poi)
 	if (!poi_icon_default) {
 		/* Initialise the default POI icon: */
 		poi_icon_default = gdk_pixbuf_new_from_file_at_size
-			(PACKAGE_PIXMAPS_DIR "/" PACKAGE "-poi.png",
+			(PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME "-poi.png",
 			 25, 25,
 			 NULL);
 	}
@@ -156,7 +156,7 @@ get_poi_icon (poi_t *poi)
 			char *autocache_dir =
 				g_build_filename (global_home_dir,
 				                  ".VisualIDs",
-				                  PACKAGE, "poi-icons",
+				                  PACKAGE_NAME, "poi-icons",
 				                  NULL);
 
 			g_mkdir_with_parents (autocache_dir, 0777);

@@ -222,6 +222,10 @@ apt install
   libgladeui-dev
   libgtk2.0-dev
   libsqlite3-dev
+  libgtk2.0-0
+  libatk1.0-0
+  libgail-common
+  libgail18
 ```
 
 src/Makefile

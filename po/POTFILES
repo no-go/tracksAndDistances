@@ -34,5 +34,5 @@
 	../src/hrm_functions.c \
 	../src/hrm_functions.h \
 	../data/foxtrotgps.desktop.in \
-	../data/org.foxtrotgps.gschema.xml \
-	../data/foxtrotgps.glade
+	../[type: gettext/gsettings]data/org.foxtrotgps.gschema.xml \
+	../data/foxtrotgps.glade \
