@@ -4,6 +4,8 @@
 
 #include <gtk/gtk.h>
 
+extern GtkBuilder *global_builder;
+
 /*
  * Standard gettext macros.
  */

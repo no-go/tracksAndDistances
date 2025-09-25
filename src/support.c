@@ -11,42 +11,28 @@
 #include <stdio.h>
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
 
 #include "support.h"
 
-GtkWidget*
-lookup_widget                          (GtkWidget       *widget,
-                                        const gchar     *widget_name)
+GtkBuilder *global_builder = NULL;
+
+GtkWidget* lookup_widget(GtkWidget *widget, const gchar *widget_name)
 {
-  GtkWidget *parent, *found_widget;
-  GladeXML *gladexml;
+    GtkWidget *found_widget;
 
-  for (;;)
-    {
-      if ((gladexml = glade_get_widget_tree (widget)))
-        {
-          found_widget = glade_xml_get_widget (gladexml, widget_name);
-
-          return found_widget;
-        }
-
-      if (GTK_IS_MENU (widget))
-        parent = gtk_menu_get_attach_widget (GTK_MENU (widget));
-      else
-        parent = widget->parent;
-      if (!parent)
-        parent = (GtkWidget*) g_object_get_data (G_OBJECT (widget), "GladeParentKey");
-      if (parent == NULL)
-        break;
-      widget = parent;
+    if (global_builder == NULL) {
+        g_warning("Builder nicht initialisiert!");
+        return NULL;
     }
 
-  found_widget = (GtkWidget*) g_object_get_data (G_OBJECT (widget),
-                                                 widget_name);
-  if (!found_widget)
-    g_warning ("Widget not found: %s", widget_name);
-  return found_widget;
+    found_widget = GTK_WIDGET(gtk_builder_get_object(global_builder, widget_name));
+    if (!found_widget) {
+        g_warning("Widget not found: %s", widget_name);
+    }
+
+    return found_widget;
 }
 
 static GList *pixmaps_directories = NULL;

@@ -11,7 +11,8 @@
 #include <string.h>
 #include <gtk/gtk.h>
 
-#include <glade/glade.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
 
 #include "interface.h"
 #include "support.h"
@@ -101,37 +102,21 @@ main (int argc, char *argv[])
 	add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
 
-	glade_init ();
+	global_builder = gtk_builder_new();
 
-	gladexml = glade_xml_new (gladefile, NULL, GETTEXT_PACKAGE);
-
-	if (!gladexml)
-	{
-		/* Developers may run into this if they're naively
-		   trying to run from the build-tree without having
-		   specifically configured the build to allow that or
-		   having passed a "--gui=..." option to the program,
-		   so we need to actually catch this error and output
-		   an informative message.
-
-		   This is, however, not an error that end users should face;
-		   if they do, then someone upstream from them messed up--
-		   either `make install' worked only half-way, or a packager
-		   left something critical out of the package. In either case,
-		   we want to fail in a way that indicates to the user
-		   that something is really wrong and they should report
-		   a bug.
-		*/
-
+	if (!gtk_builder_add_from_file(global_builder, gladefile, &error)) {
 		g_error (_("%s could not load its user interface; "
-			   "%s does not not appear to be properly installed."),
-			 PACKAGE, PACKAGE);
+		 "%s does not not appear to be properly installed."),
+		 PACKAGE, PACKAGE);
+		return 1;
 	}
 
-	glade_xml_signal_autoconnect (gladexml);
+	gtk_builder_connect_signals(global_builder, NULL);
 
 	pre_init();
-	window1 = glade_xml_get_widget (gladexml, "window1");
+
+	window1 = GTK_WIDGET(gtk_builder_get_object(global_builder, "window1"));
+
 	char *window_title =
 		g_strdup_printf (gtk_window_get_title (GTK_WINDOW (window1)),
 		                 _(PACKAGE_NAME));
@@ -198,20 +183,20 @@ main (int argc, char *argv[])
 		gtk_toggle_tool_button_set_active(toggle, TRUE);
 	}
 
-	window2 = glade_xml_get_widget (gladexml, "window2");
-	window3 = glade_xml_get_widget (gladexml, "window3");
-	menu1 = glade_xml_get_widget (gladexml, "menu1");
-	route_menu = glade_xml_get_widget (gladexml, "route_menu");
+	window2 = gtk_builder_get_object (global_builder, "window2");
+	window3 = gtk_builder_get_object (global_builder, "window3");
+	menu1 = gtk_builder_get_object (global_builder, "menu1");
+	route_menu = gtk_builder_get_object (global_builder, "route_menu");
 
 #ifdef ENABLE_HRM
-	gtk_widget_show (glade_xml_get_widget (gladexml, "frame15"));
+	gtk_widget_show (gtk_builder_get_object (global_builder, "frame15"));
 #else
 	/* It looks like we can't hide widgets attached to a grid,
 	   so the next best thing is to just `null them out':
 	 */
-	gtk_label_set_label (glade_xml_get_widget (gladexml, "label205"), "");
-	gtk_label_set_label (glade_xml_get_widget (gladexml, "label206"), "");
-	gtk_label_set_label (glade_xml_get_widget (gladexml, "label207"), "");
+	gtk_label_set_label (gtk_builder_get_object (global_builder, "label205"), "");
+	gtk_label_set_label (gtk_builder_get_object (global_builder, "label206"), "");
+	gtk_label_set_label (gtk_builder_get_object (global_builder, "label207"), "");
 #endif
 
 	init();

@@ -1,0 +1,108 @@
+<schemalist>
+  <schema id="org.foxtrotgps" path="/org/foxtrotgps/" gettext-domain="foxtrotgps">
+    <key name="gpsd-host" type="s">
+      <default>'localhost'</default>
+      <summary>GPSD host</summary>
+    </key>
+    <key name="gpsd-port" type="s">
+      <default>'2947'</default>
+      <summary>GPSD port</summary>
+    </key>
+    <key name="latlon-unit" type="i">
+      <default>0</default>
+      <summary>Latitude/longitude unit</summary>
+    </key>
+    <key name="alt-unit" type="i">
+      <default>0</default>
+      <summary>Altitude unit</summary>
+    </key>
+    <key name="speed-unit" type="i">
+      <default>0</default>
+      <summary>Speed unit</summary>
+    </key>
+    <key name="repo-name" type="s">
+      <default>'OSM'</default>
+      <summary>The active map-repository</summary>
+    </key>
+    <key name="repos" type="as">
+      <default>[]</default>
+      <summary>Map-repository definitions</summary>
+    </key>
+    <key name="auto-download" type="b">
+      <default>true</default>
+      <summary>Automatically download map-tiles as needed</summary>
+    </key>
+    <key name="no-redownload" type="b">
+      <default>false</default>
+      <summary>Avoid re-downloading cached tiles</summary>
+    </key>
+    <key name="tracklog-on" type="b">
+      <default>false</default>
+      <summary>Log tracks to a local file</summary>
+    </key>
+    <key name="track-dir" type="s">
+      <default>''</default>
+      <summary>The directory into which track-files are written</summary>
+    </key>
+    <key name="global-x" type="i">
+      <default>890</default>
+      <summary>Horizontal viewport-coordinate</summary>
+    </key>
+    <key name="global-y" type="i">
+      <default>515</default>
+      <summary>Vertical viewport-coordinate</summary>
+    </key>
+    <key name="global-zoom" type="i">
+      <default>3</default>
+      <summary>Viewport zoom-level</summary>
+    </key>
+    <key name="global-detail-zoom" type="i">
+      <default>0</default>
+      <summary>Detail scale-factor</summary>
+    </key>
+    <key name="myposition-lat" type="d">
+      <default>0</default>
+      <summary>`My position', latitude</summary>
+    </key>
+    <key name="myposition-lon" type="d">
+      <default>0</default>
+      <summary>`My position', longitude</summary>
+    </key>
+    <key name="fftimer-running" type="b">
+      <default>false</default>
+      <summary>Publish your location &amp; show others' locations</summary>
+    </key>
+    <key name="ffupdate-interval-minutes" type="d">
+      <default>5</default>
+      <summary>Friend-finder update interval, in minutes</summary>
+    </key>
+    <key name="me-msg" type="s">
+      <default>''</default>
+      <summary>Status-message to publish in the friend-finder</summary>
+    </key>
+    <key name="nick" type="s">
+      <default>''</default>
+      <summary>Friend-finder username</summary>
+    </key>
+    <key name="pass" type="s">
+      <default>''</default>
+      <summary>Friend-finder password</summary>
+    </key>
+    <key name="geocode-correction" type="i">
+      <default>0</default>
+      <summary>Number of seconds by which photo timestamps must be corrected for geocoding</summary>
+    </key>
+    <key name="geocode-timezone" type="i">
+      <default>13</default>
+      <summary>Treat photo-timestamps as being relative to this timezone (UTC=13)</summary>
+    </key>
+    <key name="hrm-bt-addr" type="s">
+      <default>''</default>
+      <summary>The Bluetooth address of your heartrate-monitor</summary>
+    </key>
+    <key name="hrm-on" type="b">
+      <default>false</default>
+      <summary>Use the heartrate-monitor specified in hrm_bt_addr</summary>
+    </key>
+  </schema>
+</schemalist>
