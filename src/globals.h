@@ -6,6 +6,7 @@
 #include <gtk/gtk.h>
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
+#include "gfx_compat.h"
 
 #define MSG_SEND_URL "http://tangogps.org/friends/msg_send.php"
 
@@ -96,7 +97,7 @@ typedef struct {
 	int max;
 } hrm_data_t;
 
-extern GdkPixmap 	*pixmap;
+extern CompatPixmap 	*pixmap;
 
 extern const char	*gladefile;
 extern GtkBuilder *global_builder;

@@ -18,6 +18,7 @@
 #include "hrm_functions.h"
 #include "globals.h"
 #include "support.h"
+#include "gfx_compat.h"
 
 #define MAX_HEART_FREQ 160
 
@@ -51,12 +52,10 @@ void
 osd_hrm(gboolean force_redraw)
 {
 #ifdef HAVE_BLUEZ
-	PangoContext		*context = NULL;
 	PangoLayout		*layout  = NULL;
 	PangoFontDescription	*desc    = NULL;
 
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 
 	gchar *buffer;
 	static int x = 10, y = 310;
@@ -77,25 +76,20 @@ osd_hrm(gboolean force_redraw)
 			buffer = g_strdup_printf("--");
 
 
-		context = gtk_widget_get_pango_context (map_drawable);
-		layout  = pango_layout_new (context);
+		layout  = pango_cairo_create_layout(pixmap->cr);
 		desc    = pango_font_description_new();
 
 		pango_font_description_set_absolute_size (desc, 50 * PANGO_SCALE);
 		pango_layout_set_font_description (layout, desc);
 		pango_layout_set_text (layout, buffer, strlen(buffer));
 
-
-		gc = gdk_gc_new (map_drawable->window);
+		//gc = gdk_gc_new (map_drawable->window);
+		gc = compat_gc_new ();
 
 		if(hrmdata)
-			color.red = (hrmdata->freq > MAX_HEART_FREQ) ? 0xffff : 0;
+			compat_set_color(gc, (hrmdata->freq > MAX_HEART_FREQ) ? 1 : 0, 0, 0);
 		else
-			color.red = 0;
-		color.green = 0;
-		color.blue = 0;
-
-		gdk_gc_set_rgb_fg_color (gc, &color);
+			compat_set_color(gc, 0,0,0);
 
 		if(hrmdata)
 			hrm = hrmdata->freq;
@@ -105,20 +99,12 @@ osd_hrm(gboolean force_redraw)
 		if(hrm_tmp != hrm || force_redraw)
 		{
 
-			gdk_draw_drawable (
-				map_drawable->window,
-				map_drawable->style->fg_gc[GTK_WIDGET_STATE (map_drawable)],
-				pixmap,
-				0,300,
-				0, 300,
-				width+10,height+10);
+			compat_draw_drawable (map_drawable, pixmap, 0, 300, 0, 300, width + 10, height + 10);
 
-
-
-				gdk_draw_layout(map_drawable->window,
-						gc,
-						x, y,
-						layout);
+			compat_draw_layout (pixmap,
+					gc,
+					x, y,
+					layout);
 
 
 			pango_layout_get_pixel_size(layout, &width, &height);

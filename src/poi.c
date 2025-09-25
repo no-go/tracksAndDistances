@@ -12,6 +12,8 @@
 #include "interface.h"
 #include "util.h"
 #include "tile_management.h"
+#include "gfx_compat.h"
+#include <gdk-pixbuf/gdk-pixbuf.h>
 
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -227,16 +229,12 @@ paint_pois()
 	int pixel_x, pixel_y, x, y;
 	float lat, lon;
 	GSList *list;
-	GdkColor color;
-	static GdkGC *gc;
+	static CompatGC *gc;
 
 
 	if (!gc)
-		gc = gdk_gc_new(pixmap);
-	color.green = 0;
-	color.blue = 60000;
-	color.red = 0;
-	gdk_gc_set_rgb_fg_color(gc, &color);
+		gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 0, 0, 60000);
 
 
 	if(global_show_pois)
@@ -269,9 +267,8 @@ paint_pois()
 
 			if(!photo_icon)
 			{
-				gdk_draw_arc (
+				compat_draw_arc (
 					pixmap,
-
 					gc,
 					TRUE,
 					x-4, y-4,
@@ -280,9 +277,9 @@ paint_pois()
 			}
 			else
 			{
-				gdk_draw_pixbuf (
+				compat_draw_pixbuf (
 					pixmap,
-					NULL,
+					gc,
 					photo_icon,
 					0,0,
 					x - icon_width/2, y - icon_height/2,

@@ -16,6 +16,7 @@
 #include "wp.h"
 #include "tracks.h"
 #include "route.h"
+#include "gfx_compat.h"
 
 typedef struct {
 	GdkPixbuf *pixbuf;
@@ -23,7 +24,7 @@ typedef struct {
 } tile_hash_t;
 
 
-static GdkGC		*gc_map = NULL;
+static CompatGC		*gc_map = NULL;
 
 static GtkWidget	*drawingarea11 = NULL;
 static GHashTable	*hash_table = NULL;
@@ -89,7 +90,7 @@ load_tile(	gchar *dir,
 		g_object_unref(gc_map);
 	if(pixmap)
 	{
-		gc_map = gdk_gc_new(pixmap);
+		gc_map = compat_gc_new();
 	}
 	else printf("no drawable -> NULL\n");
 
@@ -165,7 +166,7 @@ load_tile(	gchar *dir,
 	else
 	{
 
-		gdk_draw_pixbuf (
+		compat_draw_pixbuf (
 			pixmap,
 			gc_map,
 			pixbuf,

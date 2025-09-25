@@ -1,9 +1,10 @@
 
 
 #include "globals.h"
+#include "gfx_compat.h"
 #include <gtk/gtk.h>
 
-GdkPixmap *pixmap = NULL;
+CompatPixmap *pixmap = NULL;
 
 const char *gladefile =
 	PACKAGE_DATA_DIR "/" PACKAGE_NAME "/" PACKAGE_NAME ".glade";

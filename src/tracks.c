@@ -26,6 +26,7 @@
 #include "tile_management.h"
 #include "tracks.h"
 #include "util.h"
+#include "gfx_compat.h"
 
 GSList *loaded_track = NULL;
 GtkWidget *window12;
@@ -63,16 +64,12 @@ paint_track()
 	int pixel_x, pixel_y, x,y, last_x = 0, last_y = 0;
 	int counter = -1, modulo, j=0;
 	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 	gboolean is_line = FALSE;
 
-	gc = gdk_gc_new(pixmap);
-	color.green = 0;
-	color.blue = 0;
-	color.red = 60000;
-	gdk_gc_set_rgb_fg_color(gc, &color);
-	gdk_gc_set_line_attributes(gc,
+	gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 60000, 0, 0);
+	compat_gc_set_line_attributes(gc,
 		5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 
 	if (global_zoom < 16 && global_zoom > 10)
@@ -110,7 +107,7 @@ paint_track()
 
 			if(is_line)
 			{
-				gdk_draw_line (pixmap, gc, x, y, last_x, last_y);
+				compat_draw_line (pixmap, gc, x, y, last_x, last_y);
 				gtk_widget_queue_draw_area (
 					map_drawable,
 					x-4, y-4,
@@ -133,16 +130,12 @@ paint_loaded_track()
 	GSList *list;
 	int pixel_x, pixel_y, x,y, last_x = 0, last_y = 0;
 	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 	gboolean is_line = FALSE;
 
-	gc = gdk_gc_new(pixmap);
-	color.green = 50000;
-	color.blue = 0;
-	color.red = 0;
-	gdk_gc_set_rgb_fg_color(gc, &color);
-	gdk_gc_set_line_attributes(gc,
+	gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 0, 50000, 0);
+	compat_gc_set_line_attributes(gc,
 		5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
 
 
@@ -165,7 +158,7 @@ paint_loaded_track()
 
 		if(is_line)
 		{
-			gdk_draw_line (pixmap, gc, x, y, last_x, last_y);
+			compat_draw_line (pixmap, gc, x, y, last_x, last_y);
 			gtk_widget_queue_draw_area (
 				map_drawable,
 				x-4, y-4,

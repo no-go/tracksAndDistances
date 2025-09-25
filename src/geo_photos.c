@@ -14,6 +14,7 @@
 #include "exif.h"
 #include "tile_management.h"
 #include "tracks.h"
+#include "gfx_compat.h"
 
 #include <glib.h>
 #include <stdio.h>
@@ -90,18 +91,14 @@ paint_photos()
 	int pixel_x, pixel_y, x, y;
 	float lat, lon;
 	GSList *list;
-	GdkColor color;
 	GError	*error = NULL;
 	static GdkPixbuf *photo_icon = NULL;
-	static GdkGC *gc;
+	static CompatGC *gc;
 
 
 	if (!gc)
-		gc = gdk_gc_new(pixmap);
-	color.green = 0;
-	color.blue = 60000;
-	color.red = 0;
-	gdk_gc_set_rgb_fg_color(gc, &color);
+		gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 0, 0, 60000);
 
 
 	if(!photo_icon)
@@ -145,9 +142,8 @@ paint_photos()
 
 			if(!photo_icon && !thumb)
 			{
-				gdk_draw_arc (
+				compat_draw_arc (
 					pixmap,
-
 					gc,
 					TRUE,
 					x-4, y-4,

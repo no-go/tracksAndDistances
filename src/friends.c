@@ -1,4 +1,5 @@
 
+#include "gfx_compat.h"
 #include "callbacks.h"
 #include "friends.h"
 #include "globals.h"
@@ -15,6 +16,8 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <cairo.h>
+#include <math.h>
 
 #include <curl/curl.h>
 #include <curl/easy.h>
@@ -76,7 +79,7 @@ cb_write_to_mem(void *ptr, size_t size, size_t nmemb, void *data)
 }
 
 static GdkPixbuf	*friend_icon = NULL;
-static GdkGC		*gc_map = NULL;
+static CompatGC		*gc_map = NULL;
 static char		*db_ts_last_request_friends = NULL;
 
 
@@ -359,87 +362,70 @@ gdk_threads_leave();
 	return NULL;
 }
 
-void
-paint_friends()
-{
-	GSList *list;
-	int pixel_x, pixel_y, x,y;
-	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
-	GError	*error = NULL;
-
-	gc = gdk_gc_new(pixmap);
-	color.green = 60000;
-	color.blue = 0;
-	color.red = 10000;
-	gdk_gc_set_rgb_fg_color(gc, &color);
 
 
-	if(!friend_icon)
-	{
-		friend_icon = gdk_pixbuf_new_from_file_at_size (
-			PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME "-friend.png", 24,24,
-			&error);
-	}
-	if (pixmap && !gc_map)
-		gc_map = gdk_gc_new(pixmap);
+void paint_friends() {
+    GSList *list;
+    int pixel_x, pixel_y, x, y;
+    float lat, lon;
+    GError *error = NULL;
 
+    // GC für Freunde initialisieren
+    CompatGC *gc = compat_gc_new();
+    compat_set_color(gc, 10000.0 / 65535.0, 60000.0 / 65535.0, 0); // r, g, b
 
-	if (global_show_friends)
-		{
-		for(list = friends_list; list != NULL; list = list->next)
-		{
-			friend_t *f = list->data;
+    // Icon bei Bedarf laden
+    if (!friend_icon) {
+        friend_icon = gdk_pixbuf_new_from_file_at_size(
+            PACKAGE_PIXMAPS_DIR "/" PACKAGE_NAME "-friend.png", 24, 24, &error);
+        if (error) {
+            g_warning("Fehler beim Laden des friend-icon: %s", error->message);
+            g_clear_error(&error);
+        }
+    }
 
-			lat = deg2rad(f->lat);
-			lon = deg2rad(f->lon);
+    if (pixmap && !gc_map)
+        gc_map = compat_gc_new();
 
+    if (global_show_friends) {
+        for (list = friends_list; list != NULL; list = list->next) {
+            friend_t *f = list->data;
 
+            lat = deg2rad(f->lat);
+            lon = deg2rad(f->lon);
 
+            pixel_x = lon2pixel(global_zoom, lon);
+            pixel_y = lat2pixel(global_zoom, lat);
 
-			pixel_x = lon2pixel(global_zoom, lon);
-			pixel_y = lat2pixel(global_zoom, lat);
+            x = pixel_x - global_x;
+            y = pixel_y - global_y;
 
-			x = pixel_x - global_x;
-			y = pixel_y - global_y;
+            f->screen_x = x;
+            f->screen_y = y;
 
-			f->screen_x = x;
-			f->screen_y = y;
+            if (!friend_icon) {
+                compat_draw_arc(pixmap, gc, TRUE, x - 4, y - 4, 8, 8, 0,23040);
+            } else {
+                compat_draw_pixbuf(pixmap, gc_map, friend_icon,
+                        0, 0,             // src_x, src_y
+                        x - 12, y - 12,   // dest_x, dest_y
+                        24, 24,           // Breite, Höhe
+                        0, 0, 0);
 
+                gtk_widget_queue_draw_area(
+                    map_drawable,
+                    x - 12, y - 12,
+                    24, 24
+                );
+            }
+        }
+    }
 
-
-			if(!friend_icon)
-			{
-				gdk_draw_arc (
-					pixmap,
-
-					gc,
-					TRUE,
-					x-4, y-4,
-					8,8,
-					0,23040);
-			}
-			else
-			{
-				gdk_draw_pixbuf (
-					pixmap,
-					gc_map,
-					friend_icon,
-					0,0,
-					x-12,y-12,
-					24,24,
-					GDK_RGB_DITHER_NONE, 0, 0);
-
-				gtk_widget_queue_draw_area (
-					map_drawable,
-					x-12, y-12,
-					24,24);
-			}
-
-		}
-	}
+    compat_gc_free(gc);
 }
+
+
+
 
 void
 update_position0()

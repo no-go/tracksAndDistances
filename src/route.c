@@ -18,6 +18,7 @@
 #include <libxml/encoding.h>
 #include <libxml/xmlwriter.h>
 
+#include "gfx_compat.h"
 #include "globals.h"
 #include "tile_management.h"
 #include "route.h"
@@ -144,7 +145,7 @@ find_routepoint (int mouse_x, int mouse_y)
 
 static
 void
-draw_arrow (GdkGC *gc, int start_x, int start_y, int end_x, int end_y)
+draw_arrow (CompatGC *gc, int start_x, int start_y, int end_x, int end_y)
 {
 	int x1,y1,x2,y2;
 	double angle = atan2 (end_y - start_y, end_x - start_x) + M_PI;
@@ -158,22 +159,22 @@ draw_arrow (GdkGC *gc, int start_x, int start_y, int end_x, int end_y)
 	x2 = end_x + arrow_length * cos (angle + arrow_degrees);
 	y2 = end_y + arrow_length * sin (angle + arrow_degrees);
 
-	gdk_draw_line (pixmap, gc, start_x, start_y, end_x, end_y);
-	gdk_draw_line (pixmap, gc, end_x, end_y, x1, y1);
-	gdk_draw_line (pixmap, gc, x1, y1, x2, y2);
-	gdk_draw_line (pixmap, gc, x2, y2, end_x, end_y);
+	compat_draw_line (pixmap, gc, start_x, start_y, end_x, end_y);
+	compat_draw_line (pixmap, gc, end_x, end_y, x1, y1);
+	compat_draw_line (pixmap, gc, x1, y1, x2, y2);
+	compat_draw_line (pixmap, gc, x2, y2, end_x, end_y);
 }
 
 static
 void
-draw_line_of_route (GdkGC *gc, int x1, int y1, int x2, int y2)
+draw_line_of_route (CompatGC *gc, int x1, int y1, int x2, int y2)
 {
 	if (abs (x1-x2) > 30 || abs (y1-y2) > 30) {
 		/* Line is long enough. Draw arrow */
 		draw_arrow (gc, x1, y1, x2, y2);
 	} else {
 		/* short line. Omit arrow. */
-		gdk_draw_line (pixmap, gc, x1, y1, x2, y2);
+		compat_draw_line (pixmap, gc, x1, y1, x2, y2);
 	}
 }
 
@@ -186,8 +187,7 @@ paint_route ()
 	GSList *list;
 	int pixel_x, pixel_y, x,y, last_x = 0, last_y = 0;
 	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 	gboolean is_line = FALSE;
 
 	/* Load icon if not already loaded: */
@@ -198,13 +198,9 @@ paint_route ()
 	}
 
 	/* Create GC for drawing the route line */
-	gc = gdk_gc_new (pixmap);
-	color.green = 0;
-	color.blue = 0;
-	color.red = 50000;
-	gdk_gc_set_rgb_fg_color (gc, &color);
-	gdk_gc_set_line_attributes (gc, 5, GDK_LINE_SOLID,
-	                            GDK_CAP_ROUND, GDK_JOIN_ROUND);
+	gc = compat_gc_new ();
+	gdk_gc_set_rgb_fg_color (gc, 50000, 0, 0);
+	compat_gc_set_line_attributes (gc, 5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
 	/* [1] paint line first */
 	for (list = route; list != NULL; list = list->next)
@@ -248,20 +244,20 @@ paint_route ()
 		y = pixel_y - global_y;
 
 		if (!wp_icon) {
-			gdk_draw_arc (pixmap,
+			compat_draw_arc (pixmap,
 			              gc,
 			              TRUE,
 			              x-4, y-4,
 			              8,8,
 			              0,23040);
 		} else {
-			gdk_draw_pixbuf (pixmap,
-			                 NULL,
-			                 wp_icon,
-			                 0,0,
-			                 x,y-wp_icon_height,
-			                 wp_icon_width,wp_icon_height,
-			                 GDK_RGB_DITHER_NONE, 0, 0);
+			compat_draw_pixbuf (pixmap,
+                        gc,
+                        wp_icon,
+                        0, 0,
+                        x, y - wp_icon_height,
+                        wp_icon_width, wp_icon_height,
+                        GDK_RGB_DITHER_NONE, 0, 0);
 
 			gtk_widget_queue_draw_area (map_drawable,
 			                            x, y-wp_icon_height,
