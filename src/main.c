@@ -183,20 +183,20 @@ main (int argc, char *argv[])
 		gtk_toggle_tool_button_set_active(toggle, TRUE);
 	}
 
-	window2 = gtk_builder_get_object (global_builder, "window2");
-	window3 = gtk_builder_get_object (global_builder, "window3");
-	menu1 = gtk_builder_get_object (global_builder, "menu1");
-	route_menu = gtk_builder_get_object (global_builder, "route_menu");
+	window2 = GTK_WIDGET(gtk_builder_get_object (global_builder, "window2"));
+	window3 = GTK_WIDGET(gtk_builder_get_object (global_builder, "window3"));
+	menu1 = GTK_WIDGET(gtk_builder_get_object (global_builder, "menu1"));
+	route_menu = GTK_WIDGET(gtk_builder_get_object (global_builder, "route_menu"));
 
 #ifdef ENABLE_HRM
-	gtk_widget_show (gtk_builder_get_object (global_builder, "frame15"));
+	gtk_widget_show (GTK_WIDGET(gtk_builder_get_object (global_builder, "frame15")));
 #else
 	/* It looks like we can't hide widgets attached to a grid,
 	   so the next best thing is to just `null them out':
 	 */
-	gtk_label_set_label (gtk_builder_get_object (global_builder, "label205"), "");
-	gtk_label_set_label (gtk_builder_get_object (global_builder, "label206"), "");
-	gtk_label_set_label (gtk_builder_get_object (global_builder, "label207"), "");
+	gtk_label_set_label (GTK_LABEL(gtk_builder_get_object (global_builder, "label205")), "");
+	gtk_label_set_label (GTK_LABEL(gtk_builder_get_object (global_builder, "label206")), "");
+	gtk_label_set_label (GTK_LABEL(gtk_builder_get_object (global_builder, "label207")), "");
 #endif
 
 	init();

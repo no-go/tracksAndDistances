@@ -617,7 +617,7 @@ create_friend_box(friend_t *f)
 void
 on_msg_friend_clicked(GtkButton *button, gpointer user_data)
 {
-	GladeXML *gladexml;
+	GtkBuilder *builder;
 	GtkWidget *widget, *window;
 	char *label_txt;
 	char *to;
@@ -628,11 +628,12 @@ on_msg_friend_clicked(GtkButton *button, gpointer user_data)
 	widget = lookup_widget(GTK_WIDGET(button), "window8");
 	gtk_widget_destroy(widget);
 
-	gladexml = glade_xml_new (gladefile, "dialog9", GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	window = glade_xml_get_widget (gladexml, "dialog9");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	window = GTK_WIDGET(gtk_builder_get_object (builder, "dialog9"));
 	g_signal_connect_swapped (window, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 
 	gtk_widget_show(window);
 

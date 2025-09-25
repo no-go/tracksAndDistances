@@ -3,12 +3,11 @@
 #include "globals.h"
 #include <gtk/gtk.h>
 
-
 GdkPixmap *pixmap = NULL;
 
 const char *gladefile =
 	PACKAGE_DATA_DIR "/" PACKAGE "/" PACKAGE ".glade";
-GladeXML *gladexml = NULL;
+GtkBuilder *global_builder = NULL;
 
 GtkWidget *window1 = NULL;
 GtkWidget *window2 = NULL;

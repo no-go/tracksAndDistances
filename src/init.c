@@ -196,7 +196,7 @@ init()
 	widget = lookup_widget(window1, "checkbutton2");
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget), global_auto_download);
 
-	widget = glade_xml_get_widget (gladexml, "tile_redownload_toggle");
+	widget = GTK_WIDGET(gtk_builder_get_object (global_builder, "tile_redownload_toggle"));
 	gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(widget),
 	                             !global_no_redownload);
 

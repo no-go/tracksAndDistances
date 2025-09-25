@@ -430,18 +430,19 @@ on_combobox_cat_changed(GtkComboBox     *combobox)
 void
 show_window6()
 {
-	GladeXML *gladexml;
+	GtkBuilder *builder;
 	GtkWidget *dialog;
 	GtkWidget *entry14, *entry15, *combobox2;
 
 	double lat, lon, lat_deg, lon_deg;
 	char buf[64];
 
-	gladexml = glade_xml_new (gladefile, "window6", GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	dialog = glade_xml_get_widget (gladexml, "window6");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	dialog = GTK_WIDGET(gtk_builder_get_object (builder, "window6"));
 	g_signal_connect_swapped (dialog, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 	gtk_widget_show(dialog);
 	new_dialog = TRUE;
 
@@ -715,6 +716,7 @@ void
 show_poi_detail()
 {
 	GtkWidget *window, *widget;
+	GtkBuilder *builder;
 	GtkWidget *label;
 	GSList *list;
 	gchar *buffer = NULL, *buffer2 = NULL;
@@ -724,13 +726,12 @@ show_poi_detail()
 	waypoint_t *wp = g_new0(waypoint_t, 1);
 	poi_t *p, *this_poi = NULL;
 
-	GladeXML *gladexml = glade_xml_new (gladefile,
-					    "window5",
-					    GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	window = glade_xml_get_widget (gladexml, "window5");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	window = GTK_WIDGET(gtk_builder_get_object (builder, "window5"));
 	g_signal_connect_swapped (window, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 
 	lat = pixel2lat(global_zoom, global_y+mouse_y);
 	lon = pixel2lon(global_zoom, global_x+mouse_x);

@@ -22,6 +22,7 @@
 #include <libexif/exif-data.h>
 #include <time.h>
 #include <math.h>
+#include <glib/gi18n.h>
 
 #define PHOTO_DB "geophoto.db"
 #define PHOTO_DB_CREATE "CREATE TABLE photo " \
@@ -225,7 +226,7 @@ geo_photos_open_dialog_photo_correlate()
 		GtkWidget *dbinsert_cb;
 		GtkLabel *dbinsert_label;
 		dialog_photo_correlate =
-			glade_xml_get_widget (gladexml, "dialog_geocode");
+			GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog_geocode"));
 		dbinsert_cb =
 			lookup_widget (dialog_photo_correlate,
 		                       "checkbutton14");
@@ -267,8 +268,8 @@ geo_photos_open_dialog_image_data()
 
 	if(!dialog_image_data)
 	{
-		dialog_image_data = glade_xml_get_widget (gladexml,
-							  "dialog_image_data");
+		dialog_image_data = GTK_WIDGET(gtk_builder_get_object (global_builder,
+							  "dialog_image_data"));
 		gtk_widget_show(dialog_image_data);
 
 		combobox = lookup_widget(dialog_image_data, "combobox7");
@@ -677,8 +678,8 @@ geo_photo_close_dialog_photo_correlate()
 {
 	GtkWidget *label;
 
-	dialog_geocode_result = glade_xml_get_widget (gladexml,
-						      "dialog_geocode_result");
+	dialog_geocode_result = GTK_WIDGET(gtk_builder_get_object (global_builder,
+						      "dialog_geocode_result"));
 
 	label = lookup_widget(dialog_geocode_result, "label177");
 	gtk_label_set_text(GTK_LABEL(label), _("Working...."));

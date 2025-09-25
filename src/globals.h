@@ -4,7 +4,8 @@
 
 
 #include <gtk/gtk.h>
-#include <glade/glade.h>
+#include <GLES2/gl2.h>
+#include <EGL/egl.h>
 
 #define MSG_SEND_URL "http://tangogps.org/friends/msg_send.php"
 
@@ -98,7 +99,7 @@ typedef struct {
 extern GdkPixmap 	*pixmap;
 
 extern const char	*gladefile;
-extern GladeXML		*gladexml;
+extern GtkBuilder *global_builder;
 
 extern GtkWidget	*window1, *window2;
 extern GtkWidget	*map_drawable;

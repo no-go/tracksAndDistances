@@ -14,9 +14,8 @@
 #include <GLES2/gl2.h>
 #include <EGL/egl.h>
 
+#include "globals.h"
 #include "support.h"
-
-GtkBuilder *global_builder = NULL;
 
 GtkWidget* lookup_widget(GtkWidget *widget, const gchar *widget_name)
 {

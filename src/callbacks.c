@@ -744,7 +744,7 @@ on_button7_clicked                     (GtkButton       *button,
 	GtkWidget	*entry_dir;
 	GtkWidget	*togglebutton;
 
-	dialog1 = glade_xml_get_widget (gladexml, "dialog1");
+	dialog1 = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog1"));
 
 	entry_repo = lookup_widget(dialog1, "entry5");
 	entry_uri = lookup_widget(dialog1, "entry20");
@@ -863,18 +863,19 @@ on_item3_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
 	GSList *list;
-	GladeXML *gladexml;
+	GtkBuilder *builder;
 	GtkWidget *label, *window, *friend_box, *widget, *hseparator;
 	gchar buffer[8192];
 	gboolean friend_found = FALSE;
 	float lat, lon,lat_deg,lon_deg;
 	float distance=0;
 
-	gladexml = glade_xml_new (gladefile, "window8", GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	window = glade_xml_get_widget (gladexml, "window8");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	window = GTK_WIDGET(gtk_builder_get_object (builder, "window8"));
 	g_signal_connect_swapped (window, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 
 	widget = lookup_widget(window, "vbox35");
 	gtk_widget_show (window);
@@ -1066,7 +1067,7 @@ on_item4_activate                      (GtkMenuItem     *menuitem,
     g_sprintf (clipnew, _("%s,%.2f%s\n"), latlon, overall_distance*unit_conv, distunit);
     g_string_append(toclipboard, clipnew);
     gtk_clipboard_set_text(clipdummy, toclipboard->str, -1);
-    
+
 	gtk_label_set_label(GTK_LABEL(label),buffer);
 	gtk_widget_show (window2);
 
@@ -1371,7 +1372,7 @@ on_button20_clicked                    (GtkButton       *button,
 {
 	GtkWidget *dialog3, *entry;
 
-	dialog3 = glade_xml_get_widget (gladexml, "dialog3");
+	dialog3 = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog3"));
 	entry = lookup_widget(dialog3, "entry12");
 	gtk_entry_set_text(GTK_ENTRY(entry), global_track_dir);
 
@@ -1473,7 +1474,7 @@ on_item8_activate                      (GtkMenuItem     *menuitem,
 {
 	GtkWidget *dialog4;
 
-	dialog4 = glade_xml_get_widget (gladexml, "dialog4");
+	dialog4 = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog4"));
 	gtk_widget_show(dialog4);
 }
 
@@ -1675,7 +1676,7 @@ void
 on_button21_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
-	GladeXML *gladexml;
+	GtkBuilder *builder;
 	GtkWidget *widget;
 	GtkWidget *drawingarea;
 
@@ -1686,11 +1687,12 @@ on_button21_clicked                    (GtkButton       *button,
 	GError	*error = NULL;
 	GdkGC *gc;
 
-	gladexml = glade_xml_new (gladefile, "win13_biggeo", GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	widget = glade_xml_get_widget (gladexml, "win13_biggeo");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "win13_biggeo"));
 	g_signal_connect_swapped (widget, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 
 	gtk_widget_show(widget);
 
@@ -1767,7 +1769,7 @@ on_item14_activate                     (GtkWidget       *widget,
 {
 	GtkWidget *dialog, *combobox;
 
-	dialog = glade_xml_get_widget (gladexml, "dialog6");
+	dialog = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog6"));
 	gtk_widget_show(dialog);
 
 	combobox = lookup_widget(dialog, "combobox4");
@@ -2194,8 +2196,7 @@ void
 on_button33_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
-	GladeXML *gladexml;
-
+	GtkBuilder *builder;
 	GtkWidget *widget;
 	GtkTextBuffer *tbuffer;
 	GtkWidget *window;
@@ -2207,17 +2208,13 @@ on_button33_clicked                    (GtkButton       *button,
 	gtk_text_buffer_insert_at_cursor(tbuffer, "p->desc", -1);
 	gtk_text_buffer_set_text(tbuffer, "p->desc", -1);
 
-
-
-
-	gladexml = glade_xml_new (gladefile, "window10", GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	window = glade_xml_get_widget (gladexml, "window10");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	window = GTK_WIDGET(gtk_builder_get_object (builder, "window10"));
 	g_signal_connect_swapped (window, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 	gtk_widget_show(window);
-
-
 
 	widget = lookup_widget(window, "entry17");
 	gtk_entry_set_text(GTK_ENTRY(widget), g_strdup_printf("%f",p->lat_deg));
@@ -2405,18 +2402,17 @@ void
 on_button34_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
-	GladeXML *gladexml;
+	GtkBuilder *builder;
 	GtkWidget *widget, *widget2;
 	poi_t *p;
 
 	p = user_data;
-	gladexml = glade_xml_new (gladefile,
-				  "dialog7",
-				  GETTEXT_PACKAGE);
-	glade_xml_signal_autoconnect (gladexml);
-	widget = glade_xml_get_widget (gladexml, "dialog7");
+	builder = gtk_builder_new();
+	gtk_builder_add_from_file(builder, gladefile, NULL);
+	gtk_builder_connect_signals(builder, NULL);
+	widget = GTK_WIDGET(gtk_builder_get_object (builder, "dialog7"));
 	g_signal_connect_swapped (widget, "destroy",
-				  G_CALLBACK (g_object_unref), gladexml);
+				  G_CALLBACK (g_object_unref), builder);
 	gtk_widget_show(widget);
 
 	widget2 = lookup_widget(widget, "okbutton6");
@@ -2564,7 +2560,7 @@ on_button38_clicked                    (GtkButton       *button,
 	GtkWidget	*togglebutton;
 	repo_t		*repo;
 
-	dialog8 = glade_xml_get_widget (gladexml, "dialog8");
+	dialog8 = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog8"));
 
 	entry_repo = lookup_widget(dialog8, "entry24");
 	entry_uri = lookup_widget(dialog8, "entry25");
@@ -3363,7 +3359,7 @@ on_item23_button_release_event         (GtkWidget       *widget,
 	GtkWidget *label, *button, *entry, *cbox;
 
 	if (!dialog10)
-		dialog10 = glade_xml_get_widget (gladexml, "dialog10");
+		dialog10 = GTK_WIDGET(gtk_builder_get_object (global_builder, "dialog10"));
 
 	gtk_widget_show(dialog10);
 
