@@ -1,6 +1,6 @@
 dnl Process this file with autoconf to produce a configure script.
 
-AC_INIT([FoxtrotNoGPS], [1.2.2+], [foss-gps@lists.osgeo.org])
+AC_INIT([FoxtrotNoGPS], [2.0.0+], [foss-gps@lists.osgeo.org])
 AM_INIT_AUTOMAKE([foreign no-define -Wall -Werror -Wno-portability])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
@@ -19,6 +19,7 @@ LT_INIT
 
 PKG_CHECK_MODULES(GTK, [gtk+-3.0 gthread-2.0])
 PKG_CHECK_MODULES(GLESV2, [glesv2 egl])
+PKG_CHECK_MODULES([CAIRO], [cairo])
 PKG_CHECK_MODULES(LIBCURL, [libcurl])
 PKG_CHECK_MODULES(SQLITE, [sqlite3])
 PKG_CHECK_MODULES(LIBEXIF, [libexif])
@@ -31,6 +32,11 @@ PKG_CHECK_MODULES(BLUETOOTH, [bluez],
                   [AC_MSG_WARN([Building without heartrate-monitor support])])
 
 GLIB_GSETTINGS
+
+AC_SUBST([GTK_CFLAGS])
+AC_SUBST([GTK_LIBS])
+AC_SUBST([CAIRO_CFLAGS])
+AC_SUBST([CAIRO_LIBS])
 
 AC_CONFIG_FILES([
 Makefile

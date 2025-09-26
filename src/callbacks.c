@@ -16,6 +16,7 @@
 #include "callbacks.h"
 #include "interface.h"
 #include "support.h"
+#include "gfx_compat.h"
 
 #include "globals.h"
 #include "map_management.h"
@@ -33,7 +34,6 @@
 
 /* How many move events must come in for a drag to be recognized: */
 #define WTFCOUNTER 5
-
 
 static int wtfcounter=0;
 
@@ -53,8 +53,8 @@ static int local_x = 0;
 static int local_y = 0;
 
 
-static	GdkPixmap *pixmap_photo = NULL;
-static	GdkPixmap *pixmap_photo_big = NULL;
+static	CompatPixmap *pixmap_photo = NULL;
+static	CompatPixmap *pixmap_photo_big = NULL;
 
 void do_distance();
 void do_pickpoint();
@@ -282,6 +282,9 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 	{
 		int x, y, width, height;
 		GdkModifierType state;
+		CompatGC *gc_white;
+		gc_white = compat_gc_new();
+		compat_set_color(gc_white, 1,1,1);
 
 		width  = map_drawable->allocation.width;
 		height = map_drawable->allocation.height;
@@ -322,27 +325,26 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 			mouse_dx = x - mouse_x;
 			mouse_dy = y - mouse_y;
 
-			gdk_draw_drawable (
-				widget->window,
-				widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+			compat_draw_drawable (
+				widget,
 				pixmap,
 				0,0,
 				mouse_dx,mouse_dy,
 				-1,-1);
 
 			if(mouse_dx>0)
-				gdk_draw_rectangle (
-					widget->window,
-					widget->style->white_gc,
+				compat_draw_rectangle (
+					widget,
+					gc_white,
 					TRUE,
 					0, 0,
 					mouse_dx,
 					widget->allocation.height);
 
 			if (mouse_dy>0)
-				gdk_draw_rectangle (
-					widget->window,
-					widget->style->white_gc,
+				compat_draw_rectangle (
+					widget,
+					gc_white,
 					TRUE,
 					0, 0,
 					widget->allocation.width,
@@ -362,7 +364,10 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 
 		}
 		else
+		{
 			wtfcounter++;
+		}
+		compat_gc_free(gc_white);
 	}
 
 	return FALSE;
@@ -383,11 +388,10 @@ on_drawingarea1_configure_event        (GtkWidget         *widget,
 	if (pixmap)
 		g_object_unref (pixmap);
 
-	pixmap = gdk_pixmap_new (
-			widget->window,
+	pixmap = compat_pixmap_new(
+			widget,
 			widget->allocation.width+260,
-			widget->allocation.height+260,
-			-1);
+			widget->allocation.height+260);
 
 	if (!pixmap)
 	{
@@ -420,9 +424,8 @@ on_drawingarea1_expose_event           (GtkWidget       *widget,
 
 
 
-	gdk_draw_drawable (
-		widget->window,
-		widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+	compat_draw_drawable (
+		widget,
 		pixmap,
 		event->area.x, event->area.y,
 		event->area.x, event->area.y,
@@ -1078,20 +1081,11 @@ on_item4_activate                      (GtkMenuItem     *menuitem,
 		int pixel_x, pixel_y, x, y;
 		float lt, ln;
 
+		CompatGC *gc;
 
-		GdkColor color;
-		GdkGC *gc;
-
-		gc = gdk_gc_new(pixmap);
-		color.green = 0;
-		color.blue = 50000;
-		color.red = 0;
-		gdk_gc_set_rgb_fg_color(gc, &color);
-		gdk_gc_set_line_attributes(
-		gc, 5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
-
-
-
+		gc = compat_gc_new();
+		compat_gc_set_rgb_fg_color(gc, 0, 0, 50000);
+		compat_gc_set_line_attributes(gc, 5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
 		lt = deg2rad(start_lat);
 		ln = deg2rad(start_lon);
@@ -1100,9 +1094,7 @@ on_item4_activate                      (GtkMenuItem     *menuitem,
 		x = pixel_x - global_x;
 		y = pixel_y - global_y;
 
-
-
-		gdk_draw_line (pixmap, gc, x, y, mouse_x, mouse_y);
+		compat_draw_line(pixmap, gc, x, y, mouse_x, mouse_y);
 
 		gtk_widget_queue_draw_area (
 			map_drawable,
@@ -1115,23 +1107,15 @@ on_item4_activate                      (GtkMenuItem     *menuitem,
 	{
 
 
-		GdkColor color;
-		GdkGC *gc;
+		CompatGC *gc;
 
-		gc = gdk_gc_new(pixmap);
-		color.green = 20000;
-		color.blue = 20000;
-		color.red = 65000;
-		gdk_gc_set_rgb_fg_color(gc, &color);
-		gdk_gc_set_line_attributes(
-		gc, 5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+		gc = compat_gc_new();
+		compat_gc_set_rgb_fg_color(gc, 65000, 20000, 20000);
 
+		compat_gc_set_line_attributes(gc, 5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
-
-
-		gdk_draw_arc (
+		compat_draw_arc (
 			pixmap,
-
 			gc,
 			TRUE,
 			mouse_x-8, mouse_y-8,
@@ -1505,12 +1489,12 @@ on_drawingarea2_configure_event        (GtkWidget       *widget,
                                         GdkEventConfigure *event,
                                         gpointer         user_data)
 {
+	// gtk_pixmap_new (widget->window
 	if (!pixmap_photo)
-	pixmap_photo = gdk_pixmap_new (
-			widget->window,
+		pixmap_photo = compat_pixmap_new (
+			widget,
 			widget->allocation.width,
-			widget->allocation.height,
-			-1);
+			widget->allocation.height);
 
 	if (!pixmap_photo)
 	{
@@ -1526,9 +1510,8 @@ on_drawingarea2_expose_event           (GtkWidget       *widget,
                                         GdkEventExpose  *event,
                                         gpointer         user_data)
 {
-	gdk_draw_drawable (
-		widget->window,
-		widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+	compat_draw_drawable (
+		widget,
 		pixmap_photo,
 		event->area.x, event->area.y,
 		event->area.x, event->area.y,
@@ -1605,17 +1588,18 @@ on_item10_activate                     (GtkMenuItem     *menuitem,
 			{
 				photo_file = p->filename;
 
-				gc = gdk_gc_new(pixmap_photo);
+				gc = compat_gc_new();
+				compat_set_color(gc, 1, 1, 1);
 
-				gdk_draw_rectangle (
+				compat_draw_rectangle (
 					pixmap_photo,
-					drawingarea2->style->white_gc,
+					gc,
 					TRUE,
 					0, 0,
 					drawingarea2->allocation.width,
 					drawingarea2->allocation.height);
 
-				gdk_draw_pixbuf (
+				compat_draw_pixbuf (
 					pixmap_photo,
 					gc,
 					photo,
@@ -1624,9 +1608,8 @@ on_item10_activate                     (GtkMenuItem     *menuitem,
 					-1,-1,
 					GDK_RGB_DITHER_NONE, 0, 0);
 
-				gdk_draw_drawable (
-					drawingarea2->window,
-					drawingarea2->style->fg_gc[GTK_WIDGET_STATE (drawingarea2)],
+				compat_draw_drawable (
+					drawingarea2,
 					pixmap_photo,
 					0,0,
 					0,0,
@@ -1685,7 +1668,7 @@ on_button21_clicked                    (GtkButton       *button,
 
 	GdkPixbuf *photo = NULL;
 	GError	*error = NULL;
-	GdkGC *gc;
+	CompatGC *gc;
 
 	builder = gtk_builder_new();
 	gtk_builder_add_from_file(builder, gladefile, NULL);
@@ -1708,17 +1691,18 @@ on_button21_clicked                    (GtkButton       *button,
 	}
 	else
 	{
-		gc = gdk_gc_new(pixmap_photo);
+		gc = compat_gc_new();
+		compat_set_color(gc, 1, 1, 1);
 
-		gdk_draw_rectangle (
+		compat_draw_rectangle (
 			pixmap_photo,
-			drawingarea->style->white_gc,
+			gc,
 			TRUE,
 			0, 0,
 			drawingarea->allocation.width,
 			drawingarea->allocation.height);
 
-		gdk_draw_pixbuf (
+		compat_draw_pixbuf (
 			pixmap_photo,
 			gc,
 			photo,
@@ -1727,9 +1711,8 @@ on_button21_clicked                    (GtkButton       *button,
 			-1,-1,
 			GDK_RGB_DITHER_NONE, 0, 0);
 
-		gdk_draw_drawable (
-			drawingarea->window,
-			drawingarea->style->fg_gc[GTK_WIDGET_STATE (drawingarea)],
+		compat_draw_drawable (
+			drawingarea,
 			pixmap_photo,
 			0,0,
 			0,0,
@@ -2833,14 +2816,13 @@ on_eventbox1_button_release_event      (GtkWidget       *widget,
                                         gpointer         user_data)
 {
 	GtkWidget	*window;
-
+	CompatGC *gc = compat_gc_new();
 	window = lookup_widget(widget, "drawingarea2");
 
-
-
-	gdk_draw_rectangle (
+	compat_set_color(gc, 1, 1, 1);
+	compat_draw_rectangle(
 		pixmap_photo,
-		widget->style->white_gc,
+		gc,
 		TRUE,
 		0, 0,
 		widget->allocation.width,
@@ -2851,6 +2833,7 @@ on_eventbox1_button_release_event      (GtkWidget       *widget,
 		0,0,widget->allocation.width,widget->allocation.height);
 
 	gtk_widget_hide(window3);
+	compat_gc_free(gc);
 
 	return FALSE;
 }
@@ -2875,11 +2858,10 @@ on_drawingarea3_configure_event        (GtkWidget       *widget,
                                         gpointer         user_data)
 {
 	if (!pixmap_photo_big)
-	pixmap_photo = gdk_pixmap_new (
-			widget->window,
+	pixmap_photo = compat_pixmap_new (
+			widget,
 			widget->allocation.width,
-			widget->allocation.height,
-			-1);
+			widget->allocation.height);
 
 	if (!pixmap_photo_big)
 	{
@@ -2895,9 +2877,8 @@ on_drawingarea3_expose_event           (GtkWidget       *widget,
                                         GdkEventExpose  *event,
                                         gpointer         user_data)
 {
-	gdk_draw_drawable (
-		widget->window,
-		widget->style->fg_gc[GTK_WIDGET_STATE (widget)],
+	compat_draw_drawable (
+		widget,
 		pixmap_photo,
 		event->area.x, event->area.y,
 		event->area.x, event->area.y,

@@ -7,10 +7,11 @@
 #include "callbacks.h"
 #include "wp.h"
 #include "globals.h"
+#include "gfx_compat.h"
 
 static GdkPixbuf	*wp_icon = NULL;
 static GdkPixbuf	*myposition_icon = NULL;
-static GdkGC		*gc_map = NULL;
+static CompatGC		*gc_map = NULL;
 
 
 
@@ -62,21 +63,17 @@ do_paint_wp()
 {
 	int pixel_x, pixel_y, x,y;
 	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 
-	gc = gdk_gc_new(pixmap);
-	color.green = 60000;
-	color.blue = 0;
-	color.red = 10000;
-	gdk_gc_set_rgb_fg_color(gc, &color);
+	gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 10000, 60000, 0);
 
 
 	if(!wp_icon)
 		wp_icon = load_wp_icon ();
 
 	if (pixmap && !gc_map)
-		gc_map = gdk_gc_new(pixmap);
+		gc_map = compat_gc_new();
 
 	lat = global_wp.lat;
 	lon = global_wp.lon;
@@ -94,9 +91,8 @@ do_paint_wp()
 
 	if(!wp_icon)
 	{
-		gdk_draw_arc (
+		compat_draw_arc (
 			pixmap,
-
 			gc,
 			TRUE,
 			x-4, y-4,
@@ -105,7 +101,7 @@ do_paint_wp()
 	}
 	else
 	{
-		gdk_draw_pixbuf (
+		compat_draw_pixbuf (
 			pixmap,
 			gc_map,
 			wp_icon,
@@ -127,12 +123,10 @@ do_paint_wp()
 void
 osd_wp()
 {
-	PangoContext		*context = NULL;
 	PangoLayout		*layout  = NULL;
 	PangoFontDescription	*desc    = NULL;
 
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 
 	gchar *buffer;
 	static gchar distunit[3];
@@ -171,32 +165,19 @@ osd_wp()
 					rad2deg(gpsdata->fix.bearing));
 
 
-		context = gtk_widget_get_pango_context (map_drawable);
-		layout  = pango_layout_new (context);
+		layout  = pango_cairo_create_layout(pixmap->cr);
 		desc    = pango_font_description_new();
 
 		pango_font_description_set_size (desc, 20 * PANGO_SCALE);
 		pango_layout_set_font_description (layout, desc);
 		pango_layout_set_text (layout, buffer, strlen(buffer));
 
+		//gc = compat_gc_new (map_drawable->window);
+		gc = compat_gc_new ();
+		compat_set_color(gc, 0,0,0);
 
-		gc = gdk_gc_new (map_drawable->window);
-
-
-		color.red = 0;
-		color.green = 0;
-		color.blue = 0;
-
-		gdk_gc_set_rgb_fg_color (gc, &color);
-
-
-
-
-
-
-		gdk_draw_drawable (
-			map_drawable->window,
-			map_drawable->style->fg_gc[GTK_WIDGET_STATE (map_drawable)],
+		compat_draw_drawable (
+			map_drawable,
 			pixmap,
 			global_drawingarea_width - width - 10,
 			global_drawingarea_height - height - 10,
@@ -210,7 +191,7 @@ osd_wp()
 
 
 
-			gdk_draw_layout(map_drawable->window,
+		compat_draw_layout(pixmap,
 					gc,
 					global_drawingarea_width - width - 10,
 					global_drawingarea_height - height -10,
@@ -241,16 +222,11 @@ do_paint_myposition()
 {
 	int pixel_x, pixel_y, x,y;
 	float lat, lon;
-	GdkColor color;
-	GdkGC *gc;
+	CompatGC *gc;
 	GError	*error = NULL;
 
-	gc = gdk_gc_new(pixmap);
-	color.green = 60000;
-	color.blue = 0;
-	color.red = 10000;
-	gdk_gc_set_rgb_fg_color(gc, &color);
-
+	gc = compat_gc_new();
+	compat_gc_set_rgb_fg_color(gc, 10000, 60000, 0);
 
 	if(!myposition_icon)
 	{
@@ -267,7 +243,7 @@ do_paint_myposition()
 		}
 	}
 	if (pixmap && !gc_map)
-		gc_map = gdk_gc_new(pixmap);
+		gc_map = compat_gc_new();
 
 	lat = deg2rad(global_myposition.lat);
 	lon = deg2rad(global_myposition.lon);
@@ -283,9 +259,8 @@ do_paint_myposition()
 
 	if(!myposition_icon)
 	{
-		gdk_draw_arc (
+		compat_draw_arc (
 			pixmap,
-
 			gc,
 			TRUE,
 			x-4, y-4,
@@ -294,7 +269,7 @@ do_paint_myposition()
 	}
 	else
 	{
-		gdk_draw_pixbuf (
+		compat_draw_pixbuf (
 			pixmap,
 			gc_map,
 			myposition_icon,
