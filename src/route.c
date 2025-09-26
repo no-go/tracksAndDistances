@@ -199,7 +199,7 @@ paint_route ()
 
 	/* Create GC for drawing the route line */
 	gc = compat_gc_new ();
-	gdk_gc_set_rgb_fg_color (gc, 50000, 0, 0);
+	compat_gc_set_rgb_fg_color (gc, 50000, 0, 0);
 	compat_gc_set_line_attributes (gc, 5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
 	/* [1] paint line first */
@@ -257,7 +257,7 @@ paint_route ()
                         0, 0,
                         x, y - wp_icon_height,
                         wp_icon_width, wp_icon_height,
-                        GDK_RGB_DITHER_NONE, 0, 0);
+                        CAIRO_DITHER_NONE, 0, 0);
 
 			gtk_widget_queue_draw_area (map_drawable,
 			                            x, y-wp_icon_height,

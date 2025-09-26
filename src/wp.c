@@ -108,7 +108,7 @@ do_paint_wp()
 			0,0,
 			x,y-36,
 			36,36,
-			GDK_RGB_DITHER_NONE, 0, 0);
+			CAIRO_DITHER_NONE, 0, 0);
 
 		gtk_widget_queue_draw_area (
 			map_drawable,
@@ -276,7 +276,7 @@ do_paint_myposition()
 			0,0,
 			x,y-36,
 			36,36,
-			GDK_RGB_DITHER_NONE, 0, 0);
+			CAIRO_DITHER_NONE, 0, 0);
 
 		gtk_widget_queue_draw_area (
 			map_drawable,

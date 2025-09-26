@@ -429,7 +429,7 @@ repoconfig__create_dropdown()
 
 		repo = list->data;
 		reponame = g_strdup(repo->name);
-		gtk_combo_box_append_text (GTK_COMBO_BOX(combobox), g_strdup(repo->name));
+		gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), repo->name);
 
 		if(	g_strrstr(reponame,global_curr_reponame) != NULL &&
 			strlen(reponame) == strlen(global_curr_reponame)

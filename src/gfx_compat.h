@@ -5,7 +5,7 @@
 #include <gdk-pixbuf/gdk-pixbuf.h>
 #include <glib.h>
 #include <pango/pangocairo.h>
-#include <gtk/gtkwidget.h>
+#include <gtk/gtk.h>
 
 #define COMPAT_LINE_SOLID 0
 #define COMPAT_CAP_ROUND CAIRO_LINE_CAP_ROUND
@@ -98,6 +98,15 @@ void compat_draw_rectangle(
 	gboolean filled,
 	int x, int y, int width, int height);
 
+void compat_combo_box_remove_text(
+	GtkComboBox *combobox,
+	gint index);
 
+void compat_combo_box_prepend_text(
+	GtkComboBox *combobox,
+	const gchar *text);
+
+gchar* compat_combo_box_get_active_text(
+	GtkComboBox *widget);
 
 #endif

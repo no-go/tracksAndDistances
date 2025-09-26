@@ -284,7 +284,7 @@ paint_pois()
 					0,0,
 					x - icon_width/2, y - icon_height/2,
 					-1, -1,
-					GDK_RGB_DITHER_NONE, 0, 0);
+					CAIRO_DITHER_NONE, 0, 0);
 
 			}
 

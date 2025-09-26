@@ -73,9 +73,9 @@ set_cursor(int type)
 	}
 
 	if(type == GDK_CROSSHAIR)
-		gdk_window_set_cursor(window1->window, cursor_cross);
+		gdk_window_set_cursor(gtk_widget_get_window(window1), cursor_cross);
 	else
-		gdk_window_set_cursor(window1->window, cursor_default);
+		gdk_window_set_cursor(gtk_widget_get_window(window1), cursor_default);
 }
 
 waypoint_t *selected_wp;
@@ -114,9 +114,10 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
 		if(global_zoom<global_zoom_max)
 		{
 			range = lookup_widget(window1, "vscale1");
-
-			width_center  = map_drawable->allocation.width 	/ 2;
-			height_center = map_drawable->allocation.height / 2;
+			GtkAllocation allocation;
+			gtk_widget_get_allocation(map_drawable, &allocation);
+			width_center  = allocation.width 	/ 2;
+			height_center = allocation.height / 2;
 
 			zoom_old = global_zoom;
 
@@ -143,6 +144,11 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
 
 			if (!selected_wp) {
 				int mouse_dx, mouse_dy;
+				CompatGC *gc_white;
+				gc_white = compat_gc_new();
+				compat_set_color(gc_white, 1,1,1);
+				GtkAllocation allocation;
+				gtk_widget_get_allocation(widget, &allocation);
 
 				global_x = local_x;
 				global_y = local_y;
@@ -153,20 +159,21 @@ on_drawingarea1_button_release_event   (GtkWidget       *widget,
 				global_x += mouse_dx;
 				global_y += mouse_dy;
 
-				gdk_draw_rectangle (
+				compat_draw_rectangle (
 					pixmap,
-					widget->style->white_gc,
+					gc_white,
 					TRUE,
 					0, 0,
-					widget->allocation.width+260,
-					widget->allocation.height+260);
+					allocation.width+260,
+					allocation.height+260);
 
 				gtk_widget_queue_draw_area (
 					widget,
-					0,0,widget->allocation.width+260,widget->allocation.height+260);
+					0,0,allocation.width+260,allocation.height+260);
 
 
 				repaint_all ();
+				compat_gc_free(gc_white);
 			} else {
 				selected_wp = NULL;
 			}
@@ -285,9 +292,11 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 		CompatGC *gc_white;
 		gc_white = compat_gc_new();
 		compat_set_color(gc_white, 1,1,1);
-
-		width  = map_drawable->allocation.width;
-		height = map_drawable->allocation.height;
+		GtkAllocation allocation;
+		gtk_widget_get_allocation(map_drawable, &allocation);
+		width  = allocation.width;
+		height = allocation.height;
+		CompatPixmap *cpix = compat_pixmap_new(widget, width, height);
 
 		if (event->is_hint)
 			gdk_window_get_pointer (event->window, &x, &y, &state);
@@ -332,22 +341,25 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 				mouse_dx,mouse_dy,
 				-1,-1);
 
+			GtkAllocation allocation;
+			gtk_widget_get_allocation(widget, &allocation);
+
 			if(mouse_dx>0)
 				compat_draw_rectangle (
-					widget,
+					cpix,
 					gc_white,
 					TRUE,
 					0, 0,
 					mouse_dx,
-					widget->allocation.height);
+					allocation.height);
 
 			if (mouse_dy>0)
 				compat_draw_rectangle (
-					widget,
+					cpix,
 					gc_white,
 					TRUE,
 					0, 0,
-					widget->allocation.width,
+					allocation.width,
 					mouse_dy);
 
 			autocenter_toggle =
@@ -368,6 +380,7 @@ on_drawingarea1_motion_notify_event    (GtkWidget       *widget,
 			wtfcounter++;
 		}
 		compat_gc_free(gc_white);
+		compat_pixmap_free(cpix);
 	}
 
 	return FALSE;
@@ -379,10 +392,14 @@ on_drawingarea1_configure_event        (GtkWidget         *widget,
                                         GdkEventConfigure *event,
                                         gpointer           user_data)
 {
+	CompatGC *gc_white;
+	gc_white = compat_gc_new();
+	compat_set_color(gc_white, 1,1,1);
 	map_drawable = widget;
-
-	global_drawingarea_width  = widget->allocation.width;
-	global_drawingarea_height = widget->allocation.height;
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(widget, &allocation);
+	global_drawingarea_width  = allocation.width;
+	global_drawingarea_height = allocation.height;
 
 
 	if (pixmap)
@@ -390,27 +407,28 @@ on_drawingarea1_configure_event        (GtkWidget         *widget,
 
 	pixmap = compat_pixmap_new(
 			widget,
-			widget->allocation.width+260,
-			widget->allocation.height+260);
+			allocation.width+260,
+			allocation.height+260);
 
 	if (!pixmap)
 	{
 		printf("aieee: pixmap NULL\n");
 	}
 
-	gdk_draw_rectangle (
+	compat_draw_rectangle (
 		pixmap,
-		widget->style->white_gc,
+		gc_white,
 		TRUE,
 		0, 0,
-		widget->allocation.width+260,
-		widget->allocation.height+260);
+		allocation.width+260,
+		allocation.height+260);
 
 	gtk_widget_queue_draw_area (
 		widget,
-		0,0,widget->allocation.width+260,widget->allocation.height+260);
+		0,0,allocation.width+260,allocation.height+260);
 
 	repaint_all();
+	compat_gc_free(gc_white);
 
 	return FALSE;
 }
@@ -479,9 +497,10 @@ on_button4_clicked                     (GtkButton       *button,
 	if(global_zoom<global_zoom_max)
 	{
 		range = lookup_widget(window1, "vscale1");
-
-		width_center  = map_drawable->allocation.width 	/ 2;
-		height_center = map_drawable->allocation.height / 2;
+		GtkAllocation allocation;
+		gtk_widget_get_allocation(map_drawable, &allocation);
+		width_center  = allocation.width 	/ 2;
+		height_center = allocation.height / 2;
 
 		zoom_old = global_zoom;
 
@@ -552,9 +571,10 @@ on_button5_clicked                     (GtkButton       *button,
 	if(global_zoom>2)
 	{
 		range = lookup_widget(window1, "vscale1");
-
-		width_center  = map_drawable->allocation.width 	/ 2;
-		height_center = map_drawable->allocation.height / 2;
+		GtkAllocation allocation;
+		gtk_widget_get_allocation(map_drawable, &allocation);
+		width_center  = allocation.width 	/ 2;
+		height_center = allocation.height / 2;
 
 		zoom_old = global_zoom;
 
@@ -598,9 +618,10 @@ on_vscale1_button_release_event        (GtkWidget       *widget,
 	int zoom_old;
 	float factor;
 	int width_center, height_center;
-
-	width_center  = map_drawable->allocation.width 	/ 2;
-	height_center = map_drawable->allocation.height / 2;
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(map_drawable, &allocation);
+	width_center  = allocation.width 	/ 2;
+	height_center = allocation.height / 2;
 
 	zoom_old = global_zoom;
 
@@ -626,7 +647,7 @@ on_combobox1_changed                   (GtkComboBox     *combobox,
 	static gboolean first_run = TRUE;
 
 
-	reponame_combo = gtk_combo_box_get_active_text(combobox);
+	reponame_combo = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(combobox));
 
 	global_curr_reponame = g_strdup(reponame_combo);
 
@@ -719,7 +740,7 @@ on_okbutton1_clicked                   (GtkButton       *button,
 	dir = gtk_entry_get_text(GTK_ENTRY(entry_dir));
 	reversed = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(togglebutton));
 
-	gtk_combo_box_append_text (GTK_COMBO_BOX(combobox), g_strdup(reponame));
+	gtk_combo_box_text_append_text(GTK_COMBO_BOX_TEXT(combobox), reponame);
 	gtk_combo_box_set_active(GTK_COMBO_BOX(combobox), global_repo_cnt);
 	global_repo_cnt++;
 
@@ -1218,6 +1239,8 @@ on_drawinarea1_scroll_event            (GtkWidget       *widget,
 		double factor;
 		int width_center, height_center;
 		static int slowpad = 0;
+		GtkAllocation allocation;
+		gtk_widget_get_allocation(map_drawable, &allocation);
 
 		if (event->direction == GDK_SCROLL_UP && slowpad % 2 ==0)
 		{
@@ -1227,8 +1250,8 @@ on_drawinarea1_scroll_event            (GtkWidget       *widget,
 			{
 				range = lookup_widget(window1, "vscale1");
 
-				width_center  = map_drawable->allocation.width 	/ 2;
-				height_center = map_drawable->allocation.height / 2;
+				width_center  = allocation.width / 2;
+				height_center = allocation.height / 2;
 
 				zoom_old = global_zoom;
 
@@ -1255,8 +1278,8 @@ on_drawinarea1_scroll_event            (GtkWidget       *widget,
 			{
 				range = lookup_widget(window1, "vscale1");
 
-				width_center  = map_drawable->allocation.width 	/ 2;
-				height_center = map_drawable->allocation.height / 2;
+				width_center  = allocation.width / 2;
+				height_center = allocation.height / 2;
 
 				zoom_old = global_zoom;
 
@@ -1489,12 +1512,13 @@ on_drawingarea2_configure_event        (GtkWidget       *widget,
                                         GdkEventConfigure *event,
                                         gpointer         user_data)
 {
-	// gtk_pixmap_new (widget->window
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(widget, &allocation);
 	if (!pixmap_photo)
 		pixmap_photo = compat_pixmap_new (
 			widget,
-			widget->allocation.width,
-			widget->allocation.height);
+			allocation.width,
+			allocation.height);
 
 	if (!pixmap_photo)
 	{
@@ -1539,7 +1563,7 @@ on_item10_activate                     (GtkMenuItem     *menuitem,
 
 	GdkPixbuf *photo = NULL;
 	GError	*error = NULL;
-	GdkGC *gc;
+	CompatGC *gc;
 
 	waypoint_t *wp = g_new0(waypoint_t,1);
 
@@ -1590,14 +1614,15 @@ on_item10_activate                     (GtkMenuItem     *menuitem,
 
 				gc = compat_gc_new();
 				compat_set_color(gc, 1, 1, 1);
-
+				GtkAllocation allocation;
+				gtk_widget_get_allocation(drawingarea2, &allocation);
 				compat_draw_rectangle (
 					pixmap_photo,
 					gc,
 					TRUE,
 					0, 0,
-					drawingarea2->allocation.width,
-					drawingarea2->allocation.height);
+					allocation.width,
+					allocation.height);
 
 				compat_draw_pixbuf (
 					pixmap_photo,
@@ -1606,7 +1631,7 @@ on_item10_activate                     (GtkMenuItem     *menuitem,
 					0,0,
 					0, 0,
 					-1,-1,
-					GDK_RGB_DITHER_NONE, 0, 0);
+					CAIRO_DITHER_NONE, 0, 0);
 
 				compat_draw_drawable (
 					drawingarea2,
@@ -1680,6 +1705,8 @@ on_button21_clicked                    (GtkButton       *button,
 	gtk_widget_show(widget);
 
 	drawingarea = lookup_widget(widget, "drawingarea3");
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(drawingarea, &allocation);
 
 	photo = gdk_pixbuf_new_from_file_at_size (
 							photo_file, 640,-1,
@@ -1699,8 +1726,8 @@ on_button21_clicked                    (GtkButton       *button,
 			gc,
 			TRUE,
 			0, 0,
-			drawingarea->allocation.width,
-			drawingarea->allocation.height);
+			allocation.width,
+			allocation.height);
 
 		compat_draw_pixbuf (
 			pixmap_photo,
@@ -1709,7 +1736,7 @@ on_button21_clicked                    (GtkButton       *button,
 			0,0,
 			0, 0,
 			-1,-1,
-			GDK_RGB_DITHER_NONE, 0, 0);
+			CAIRO_DITHER_NONE, 0, 0);
 
 		compat_draw_drawable (
 			drawingarea,
@@ -2278,31 +2305,31 @@ on_drawingarea1_key_press_event        (GtkWidget       *widget,
                                         GdkEventKey     *event,
                                         gpointer         user_data)
 {
-	if (event->keyval == GDK_Page_Up || event->keyval == GDK_KP_Up || event->keyval == GDK_i)
+	if (event->keyval == GDK_KEY_Page_Up || event->keyval == GDK_KEY_Up || event->keyval == GDK_KEY_i)
 		on_button4_clicked(NULL, NULL);
-	else if ((event->state & GDK_CONTROL_MASK) == GDK_CONTROL_MASK && event->keyval == GDK_p)
+	else if ((event->state & GDK_CONTROL_MASK) == GDK_CONTROL_MASK && event->keyval == GDK_KEY_p)
 		geo_photos_open_dialog_photo_correlate();
-	else if ((event->state & GDK_CONTROL_MASK) == GDK_CONTROL_MASK && event->keyval == GDK_t)
+	else if ((event->state & GDK_CONTROL_MASK) == GDK_CONTROL_MASK && event->keyval == GDK_KEY_t)
 		tracks_open_tracks_dialog();
-	else if(event->keyval == GDK_Page_Down || event->keyval == GDK_o)
+	else if(event->keyval == GDK_KEY_Page_Down || event->keyval == GDK_KEY_o)
 		on_button5_clicked(NULL, NULL);
-	else if(event->keyval == GDK_m)
+	else if(event->keyval == GDK_KEY_m)
 		on_button76_clicked(NULL, NULL);
-	else if(event->keyval == GDK_space || event->keyval == GDK_F11)
+	else if(event->keyval == GDK_KEY_space || event->keyval == GDK_KEY_F11)
 	{
 		maximized = !maximized;
 		gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(lookup_widget(window1, "button1")), maximized);
 		gtk_toggle_tool_button_set_active(GTK_TOGGLE_TOOL_BUTTON(lookup_widget(window1, "button53")), maximized);
 	}
-	else if(event->keyval == GDK_Right)
+	else if(event->keyval == GDK_KEY_Right)
 		move_map(1);
-	else if(event->keyval == GDK_Down)
+	else if(event->keyval == GDK_KEY_Down)
 		move_map(2);
-	else if(event->keyval == GDK_Left)
+	else if(event->keyval == GDK_KEY_Left)
 		move_map(3);
-	else if(event->keyval == GDK_Up)
+	else if(event->keyval == GDK_KEY_Up)
 		move_map(4);
-	else if(event->keyval == GDK_a)
+	else if(event->keyval == GDK_KEY_a)
 	{
 		global_autocenter = !global_autocenter;
 		GtkToggleToolButton *autocenter_toggle;
@@ -2319,58 +2346,58 @@ on_drawingarea1_key_press_event        (GtkWidget       *widget,
 		gtk_toggle_tool_button_set_active(autocenter_toggle,
 		                                  global_autocenter);
 	}
-	else if(event->keyval == GDK_r)
+	else if(event->keyval == GDK_KEY_r)
 		on_item23_button_release_event(NULL, NULL, NULL);
-	else if(event->keyval == GDK_1)
+	else if(event->keyval == GDK_KEY_1)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 0);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_2)
+	else if(event->keyval == GDK_KEY_2)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 1);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_3)
+	else if(event->keyval == GDK_KEY_3)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 2);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_4)
+	else if(event->keyval == GDK_KEY_4)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 3);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_5)
+	else if(event->keyval == GDK_KEY_5)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 4);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_6)
+	else if(event->keyval == GDK_KEY_6)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 5);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_7)
+	else if(event->keyval == GDK_KEY_7)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
 		gtk_combo_box_set_active(GTK_COMBO_BOX(widget), 6);
 		repaint_all();
 	}
-	else if(event->keyval == GDK_8)
+	else if(event->keyval == GDK_KEY_8)
 	{
 		GtkWidget *widget;
 		widget = lookup_widget(window1, "combobox1");
@@ -2607,8 +2634,8 @@ on_okbutton7_clicked                   (GtkButton       *button,
 
 	global_curr_reponame = g_strdup(reponame);
 
-	gtk_combo_box_remove_text(combobox, gtk_combo_box_get_active(combobox));
-	gtk_combo_box_prepend_text (combobox, g_strdup(repo->name));
+	compat_combo_box_remove_text(combobox, gtk_combo_box_get_active(combobox));
+	compat_combo_box_prepend_text (combobox, g_strdup(repo->name));
 	gtk_combo_box_set_active(combobox, 0);
 
 	settings_set_repolist();
@@ -2818,19 +2845,20 @@ on_eventbox1_button_release_event      (GtkWidget       *widget,
 	GtkWidget	*window;
 	CompatGC *gc = compat_gc_new();
 	window = lookup_widget(widget, "drawingarea2");
-
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(widget, &allocation);
 	compat_set_color(gc, 1, 1, 1);
 	compat_draw_rectangle(
 		pixmap_photo,
 		gc,
 		TRUE,
 		0, 0,
-		widget->allocation.width,
-		widget->allocation.height);
+		allocation.width,
+		allocation.height);
 
 	gtk_widget_queue_draw_area (
 		widget,
-		0,0,widget->allocation.width,widget->allocation.height);
+		0,0,allocation.width,allocation.height);
 
 	gtk_widget_hide(window3);
 	compat_gc_free(gc);
@@ -2857,11 +2885,13 @@ on_drawingarea3_configure_event        (GtkWidget       *widget,
                                         GdkEventConfigure *event,
                                         gpointer         user_data)
 {
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(widget, &allocation);
 	if (!pixmap_photo_big)
 	pixmap_photo = compat_pixmap_new (
 			widget,
-			widget->allocation.width,
-			widget->allocation.height);
+			allocation.width,
+			allocation.height);
 
 	if (!pixmap_photo_big)
 	{
@@ -3440,7 +3470,7 @@ on_okbutton11_clicked                  (GtkButton       *button,
 	end   = g_strdup( gtk_entry_get_text(GTK_ENTRY(widget)) );
 
 	widget = lookup_widget(GTK_WIDGET(button), "combobox8");
-	service = g_strdup (gtk_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
+	service = g_strdup (compat_combo_box_get_active_text(GTK_COMBO_BOX(widget)));
 
 	fetch_track (dialog10, service, start, end);
 }
@@ -3509,13 +3539,15 @@ on_button76_clicked                    (GtkButton       *button,
 
 	widget  = lookup_widget(window1, "vbox53");
 	widget1 = lookup_widget(window1, "hbox52");
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(window1, &allocation);
 
 	if(!global_infopane_visible)
 	{
-		if(window1->allocation.width <= 480)
+		if(allocation.width <= 480)
 		{
 			gtk_widget_hide(widget1);
-			gtk_widget_set_size_request(widget, window1->allocation.width, -1);
+			gtk_widget_set_size_request(widget, allocation.width, -1);
 		}
 		else
 			gtk_widget_set_size_request(widget, 360, -1);
@@ -3608,8 +3640,13 @@ move_map(int i)
 {
 	GtkWidget *widget = NULL;
 	GtkToggleToolButton *autocenter_toggle;
+	CompatGC *gc_white;
+	gc_white = compat_gc_new();
+	compat_set_color(gc_white, 1,1,1);
 
 	widget = lookup_widget(window1, "drawingarea1");
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(widget, &allocation);
 
 	if(i == 1)
 		global_x += 80;
@@ -3621,17 +3658,17 @@ move_map(int i)
 		global_y -= 80;
 
 
-	gdk_draw_rectangle (
+	compat_draw_rectangle (
 		pixmap,
-		widget->style->white_gc,
+		gc_white,
 		TRUE,
 		0, 0,
-		widget->allocation.width+260,
-		widget->allocation.height+260);
+		allocation.width+260,
+		allocation.height+260);
 
 	gtk_widget_queue_draw_area (
 		widget,
-		0,0,widget->allocation.width+260,widget->allocation.height+260);
+		0,0,allocation.width+260,allocation.height+260);
 
 	autocenter_toggle =
 		GTK_TOGGLE_TOOL_BUTTON(lookup_widget(window1, "button3"));
@@ -3642,6 +3679,7 @@ move_map(int i)
 	gtk_toggle_tool_button_set_active(autocenter_toggle, FALSE);
 
 	repaint_all();
+	compat_gc_free(gc_white);
 }
 
 void

@@ -194,3 +194,47 @@ void compat_draw_rectangle (
 		cairo_stroke(pixmap->cr);
 	}
 }
+
+void compat_combo_box_remove_text (GtkComboBox *combobox, gint index) {
+	GtkTreeModel *model = gtk_combo_box_get_model(combobox);
+
+	if (model) {
+		GtkTreeIter iter;
+		if (gtk_tree_model_iter_nth_child(model, &iter, NULL, index)) {
+			gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+		}
+	}
+}
+
+void compat_combo_box_prepend_text (GtkComboBox *combobox, const gchar *text) {
+	if (GTK_IS_COMBO_BOX_TEXT(combobox)) {
+		gtk_combo_box_text_prepend_text(GTK_COMBO_BOX_TEXT(combobox), text);
+	} else if (GTK_IS_COMBO_BOX(combobox)) {
+		GtkListStore *store = GTK_LIST_STORE(gtk_combo_box_get_model(combobox));
+		GtkTreeIter iter;
+
+		gtk_list_store_prepend(store, &iter);
+		gtk_list_store_set(store, &iter, 0, text, -1);
+	}
+}
+
+gchar* compat_combo_box_get_active_text (GtkComboBox *widget) {
+	if (GTK_IS_COMBO_BOX_TEXT(widget)) {
+
+		return g_strdup(gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(widget)));
+	} else if (GTK_IS_COMBO_BOX(widget)) {
+		GtkTreeIter iter;
+		GtkTreeModel *model = gtk_combo_box_get_model(widget);
+
+		if (gtk_combo_box_get_active_iter(widget, &iter)) {
+			gchar *text = NULL;
+			gtk_tree_model_get(model, &iter, 0, &text, -1);
+			gchar *result = g_strdup(text);
+			g_free(text);
+			return result;
+		}
+	}
+	return NULL;
+}
+
+

@@ -71,7 +71,7 @@ main (int argc, char *argv[])
 	textdomain (GETTEXT_PACKAGE);
 #endif
 
-	gtk_set_locale ();
+	setlocale(LC_ALL, "");
 
 	if (!g_option_context_parse (option_context, &argc, &argv, &error))
 	{

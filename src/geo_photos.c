@@ -164,14 +164,14 @@ paint_photos()
 					pixbuf_ptr = photo_icon;
 					icon_size = 24;
 				}
-				gdk_draw_pixbuf (
+				compat_draw_pixbuf (
 					pixmap,
 					NULL,
 					pixbuf_ptr,
 					0,0,
 					x-icon_size/2,y-icon_size/2,
 					icon_size,icon_size,
-					GDK_RGB_DITHER_NONE, 0, 0);
+					CAIRO_DITHER_NONE, 0, 0);
 
 			}
 
@@ -523,7 +523,9 @@ geo_photo_dialog_image_data_next(GtkWidget *widget, gpointer user_data, geo_phot
 	last_button = lookup_widget(widget, "button48");
 	zoom_button = lookup_widget(widget, "button50");
 
-	height = viewport->allocation.height;
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(viewport, &allocation);
+	height = allocation.height;
 
 	switch (move)
 	{

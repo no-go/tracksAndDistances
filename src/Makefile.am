@@ -29,6 +29,8 @@ foxtrotnogps_SOURCES = \
 	map_management.h\
 	globals.c\
 	globals.h\
+	gfx_compat.c\
+	gfx_compat.h\
 	converter.c\
 	converter.h\
 	gps_functions.c\
@@ -61,6 +63,8 @@ foxtrotnogps_LDFLAGS = -export-dynamic
 foxtrotnogps_LDADD =  \
 	$(GTK_LIBS) \
 	$(GLADE_LIBS) \
+	$(GLESV2_LIBS) \
+	$(CAIRO_LIBS) \
 	$(LIBCURL_LIBS) \
 	$(SQLITE_LIBS) \
 	$(LIBEXIF_LIBS) \

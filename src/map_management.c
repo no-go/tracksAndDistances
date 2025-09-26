@@ -84,7 +84,8 @@ load_tile(	gchar *dir,
 	GdkPixbuf	*pixbuf		= NULL;
 	repo_t 		*repo;
 	tile_hash_t	*tile_hash;
-
+	CompatGC *gc_white = compat_gc_new();
+	compat_set_color(gc_white, 1,1,1);
 
 	if(gc_map)
 		g_object_unref(gc_map);
@@ -150,9 +151,9 @@ load_tile(	gchar *dir,
 
 		widget = lookup_widget(window1, "drawingarea1");
 
-		gdk_draw_rectangle (
+		compat_draw_rectangle (
 			pixmap,
-			widget->style->white_gc,
+			gc_white,
 			TRUE,
 			offset_x, offset_y,
 			256,
@@ -173,7 +174,7 @@ load_tile(	gchar *dir,
 			0,0,
 			offset_x,offset_y,
 			TILESIZE,TILESIZE,
-			GDK_RGB_DITHER_NONE, 0, 0);
+			CAIRO_DITHER_NONE, 0, 0);
 
 
 		if(hash_not_found)
@@ -199,6 +200,7 @@ load_tile(	gchar *dir,
 		repo = global_curr_repo->data;
 		download_tile(repo,zoom,x/detail_scale,y/detail_scale);
 	}
+	compat_gc_free(gc_white);
 }
 
 
@@ -218,7 +220,8 @@ fill_tiles_pixel(	int pixel_x,
 	int offset_y;
 	gboolean success = FALSE;
 	repo_t *repo = global_curr_repo->data;
-
+	CompatGC *gc_white = compat_gc_new();
+	compat_set_color(gc_white, 1,1,1);
 
 	if (!hash_table)
 	{
@@ -234,7 +237,8 @@ fill_tiles_pixel(	int pixel_x,
 	}
 
 	widget = lookup_widget(window1,"drawingarea1");
-
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(map_drawable, &allocation);
 
 
 	max_pixel = (int) exp2(zoom) * TILESIZE;
@@ -258,8 +262,8 @@ fill_tiles_pixel(	int pixel_x,
 	offset_xn = offset_x;
 	offset_yn = offset_y;
 
-	width  = map_drawable->allocation.width;
-	height = map_drawable->allocation.height;
+	width  = allocation.width;
+	height = allocation.height;
 
 	tiles_nx = floor((width  - offset_x) / TILESIZE) + 1;
 	tiles_ny = floor((height - offset_y) / TILESIZE) + 1;
@@ -279,9 +283,9 @@ fill_tiles_pixel(	int pixel_x,
 
 			if(j<0 || j>=exp2(zoom))
 			{
-				gdk_draw_rectangle (
+				compat_draw_rectangle (
 					pixmap,
-					widget->style->white_gc,
+					gc_white,
 					TRUE,
 					offset_xn, offset_yn,
 					TILESIZE,
@@ -324,6 +328,7 @@ fill_tiles_pixel(	int pixel_x,
 				global_settings,
 				"global-zoom",
 				global_zoom);
+	compat_gc_free(gc_white);
 }
 
 void

@@ -70,7 +70,7 @@ paint_track()
 	gc = compat_gc_new();
 	compat_gc_set_rgb_fg_color(gc, 60000, 0, 0);
 	compat_gc_set_line_attributes(gc,
-		5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+		5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
 	if (global_zoom < 16 && global_zoom > 10)
 		modulo = exp2(16-global_zoom);
@@ -136,7 +136,7 @@ paint_loaded_track()
 	gc = compat_gc_new();
 	compat_gc_set_rgb_fg_color(gc, 0, 50000, 0);
 	compat_gc_set_line_attributes(gc,
-		5, GDK_LINE_SOLID, GDK_CAP_ROUND, GDK_JOIN_ROUND);
+		5, COMPAT_LINE_SOLID, COMPAT_CAP_ROUND, COMPAT_JOIN_ROUND);
 
 
 	for(list = loaded_track; list != NULL; list = list->next)
@@ -412,8 +412,10 @@ show_bbox (bbox_t bbox)
 	int track_zoom, width, height;
 
 	drawingarea = lookup_widget (window1, "drawingarea1");
-	width  = drawingarea->allocation.width;
-	height = drawingarea->allocation.height;
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(drawingarea, &allocation);
+	width  = allocation.width;
+	height = allocation.height;
 
 	track_zoom = get_zoom_covering (width, height,
 	                                bbox.lat1, bbox.lon1,
@@ -1076,8 +1078,10 @@ fetch_track_thread(void *ptr)
 	bbox_t bbox;
 
 	drawingarea = lookup_widget(window1, "drawingarea1");
-	width  = drawingarea->allocation.width;
-	height = drawingarea->allocation.height;
+	GtkAllocation allocation;
+	gtk_widget_get_allocation(drawingarea, &allocation);
+	width  = allocation.width;
+	height = allocation.height;
 
 	url = ptr;
 
