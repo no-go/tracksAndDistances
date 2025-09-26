@@ -206,7 +206,9 @@ You are welcome to adopt the change if you also think it makes sense for other u
 kindly regards,
 Jochen
 
-# 2025-09-25 Notes libglade-2-0 not in debian trixie
+# notes
+
+## 2025-09-25 Notes libglade-2-0 not in debian trixie
 
 without libglade I got issues. start testing some changes to migrade my code and build on debian trixie.
 
@@ -231,3 +233,22 @@ apt install
 src/Makefile
 
 `-lglfw -lGLESv2 -lm` and not `-lglade-2.0`
+
+## 2025-09-26
+
+```
+src/foxtrotnogps --gui data/foxtrotgps.glade
+
+Gtk-Message: 22:05:05.030: Failed to load module "colorreload-gtk-module"
+
+(foxtrotnogps:15520): GLib-GIO-ERROR **: 22:05:05.168: Settings schema 'org.foxtrotgps' is not installed
+Trace/breakpoint trap
+
+cat .config/gtk-3.0/settings.ini
+-> remove gtk-modules=colorreload-gtk-module
+
+sudo cp data/org.foxtrotgps.gschema.xml /usr/share/glib-2.0/schemas/
+sudo glib-compile-schemas /usr/share/glib-2.0/schemas/
+sudo mkdir -p /usr/local/share/pixmaps/
+sudo cp pixmaps/*.png /usr/local/share/pixmaps/
+```
